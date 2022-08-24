@@ -1,8 +1,7 @@
 import React from "react";
-import { Tabs  } from 'antd';
+import { Tabs } from 'antd';
 import './index.css'
 import LoginFrom from "../../component/LoginForm";
-import SignupForm from "../../component/SignupForm";
 
 const { TabPane } = Tabs;
 const LoginPage = () => {
@@ -11,12 +10,12 @@ const LoginPage = () => {
   return (
     <div className={"loginOut"}>
       <div className={"loginIn"}>
-        <Tabs defaultActiveKey="checkCode" type="card"> 
+        <Tabs defaultActiveKey="checkCode" type="card">
           <TabPane tab="验证码登录" key={'checkCode'}>
-            <LoginFrom/>
+            <LoginFrom flag={"checkCode"} />
           </TabPane>
           <TabPane tab="密码登录" key={'password'}>
-            <SignupForm/>
+            <LoginFrom flag={"password"} />
           </TabPane>
         </Tabs>
       </div>

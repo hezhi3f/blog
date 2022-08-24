@@ -9,7 +9,7 @@ const ContentLayout = () => {
     <Content className="content">
       {
         new Array(50).fill("content").map(
-          (i, text) => <div>{i}:{text}</div>
+          (i, text) => <div key={text}>{i}:{text}</div>
         )
       }
     </Content>

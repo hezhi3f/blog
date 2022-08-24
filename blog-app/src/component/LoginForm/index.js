@@ -1,44 +1,33 @@
 import React from 'react'
-import { Button, Form, Input, Row, Col } from 'antd';
+import { Button, Form, Input } from 'antd';
+import CheckCodeItem from './CheckCodeItem';
+import PasswordItem from './PasswordItem';
+import { useNavigate } from 'react-router-dom';
 
-const LoginFrom = () => {
-
+const LoginFrom = (props) => {
+  const { flag } = props
+  const navigate = useNavigate()
 
   const onFinish = (values) => {
-    console.log('Success:', values);
-  };
-
-  const onFinishFailed = (errorInfo) => {
-    console.log('Failed:', errorInfo);
-  };
+    console.log('Success:', values)
+    window.localStorage.setItem('login',true)
+    navigate('/')
+  }
   return (
     <Form
-      name="basic"
+      name={flag}
       onFinish={onFinish}
-      onFinishFailed={onFinishFailed}
       autoComplete="off"
     >
       <Form.Item name="email">
         <Input placeholder='邮箱' />
       </Form.Item>
-
-      <Form.Item >
-        <Row gutter={8}>
-          <Col span={16}>
-            <Form.Item name="checkCode" noStyle>
-              <Input placeholder='验证码'/>
-            </Form.Item>
-          </Col>
-          <Col span={8}>
-            <Button>发送验证码</Button>
-          </Col>
-        </Row>
-      </Form.Item>
-
-      <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
-        <Button type="primary" htmlType="submit">
-          Submit
-        </Button>
+      {
+        flag === "checkCode" ? <CheckCodeItem /> :
+          flag === "password" ? <PasswordItem /> : <></>
+      }
+      <Form.Item>
+        <Button type="primary" htmlType="submit" block>登录</Button>
       </Form.Item>
     </Form>
   )
