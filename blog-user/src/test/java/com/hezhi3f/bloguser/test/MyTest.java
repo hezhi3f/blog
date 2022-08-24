@@ -72,6 +72,14 @@ public class MyTest {
                 System.out.println("match :: " + pass);
             }
         }
+
+    }
+
+    @Test
+    void cast() {
+        double x = 48943.9504;
+        long a = (long) x;
+        System.out.println(a);
     }
 
 }
