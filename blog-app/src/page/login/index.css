@@ -1,0 +1,13 @@
+.loginOut {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  border: 1px solid green;
+}
+
+.loginIn {
+  border: 1px solid gold;
+  padding: 50px;
+}
