@@ -1,5 +1,6 @@
 package com.hezhi3f.bloguser.test;
 
+import com.hezhi3f.bloguser.validate.annotation.RegexEnum;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
@@ -10,14 +11,16 @@ public class MyTest {
 
     @Test
     void test() {
-        String[] demos = {"4353953",
+        String[] demos = {
+                "4353953",
                 "234244",
                 "5f34ff",
                 "43tg34",
                 "hezjio@foe.com",
                 "fmoe@fe.cdmi好",
                 "fn加mf@ocmd.cold",
-                "GRgr@42.35fr@frfewf.com"};
+                "GRgr@42.35fr@frfewf.com"
+        };
 
         Pattern checkCode1 = Pattern.compile("^\\d{6}$");
         Pattern checkCode2 = Pattern.compile("\\d{6}");
@@ -50,7 +53,25 @@ public class MyTest {
                 System.out.println(email2.pattern() + "::" + demo);
             }
         }
+    }
 
+    @Test
+    void pass() {
+        String[] passes = {
+                "nefni024nfif",
+                "f43o",
+                "mfiom30iFJ39J.$%@#3vfNONN9",
+                "43@#$r342FK0f$#J98F2",
+                "9043F]FDK0",
+                "FK04V 4JF0 2 D2"
+        };
+
+        Pattern pa = Pattern.compile(RegexEnum.PASSWORD);
+        for (String pass : passes) {
+            if (pa.matcher(pass).matches()) {
+                System.out.println("match :: " + pass);
+            }
+        }
     }
 
 }

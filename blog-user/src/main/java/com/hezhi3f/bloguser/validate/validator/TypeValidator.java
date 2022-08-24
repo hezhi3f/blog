@@ -1,6 +1,5 @@
 package com.hezhi3f.bloguser.validate.validator;
 
-import com.hezhi3f.bloguser.exception.BlogUserException;
 import com.hezhi3f.bloguser.validate.annotation.Type;
 import org.springframework.stereotype.Component;
 
@@ -14,9 +13,8 @@ public class TypeValidator extends AbstractValidator<Type> {
     private static final Map<String, Pattern> REGEXES = new HashMap<>();
 
     @Override
-    protected RuntimeException judge(Object o, Type type) {
+    protected String judge(Object o, Type type) {
         String regex = type.regex();
-        String msg = type.msg();
 
         // 给正则加缓存
         if (!REGEXES.containsKey(regex)) {
@@ -28,7 +26,7 @@ public class TypeValidator extends AbstractValidator<Type> {
         if (o instanceof String) {
             Matcher matcher = pattern.matcher((String) o);
             if (!matcher.matches()) {
-                throw new BlogUserException(msg);
+                return type.msg();
             }
         }
 

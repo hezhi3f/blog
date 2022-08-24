@@ -6,85 +6,42 @@ import com.hezhi3f.bloguser.dao.UserMapper;
 import com.hezhi3f.bloguser.entity.result.Result;
 import com.hezhi3f.bloguser.entity.user.UserLoginDTO;
 import com.hezhi3f.bloguser.entity.user.UserPO;
+import com.hezhi3f.bloguser.entity.user.UserSignupDTO;
 import com.hezhi3f.bloguser.exception.BlogUserException;
 import com.hezhi3f.bloguser.service.UserService;
+import com.hezhi3f.bloguser.util.Assert;
 import com.hezhi3f.bloguser.util.ResultUtils;
-import com.hezhi3f.bloguser.util.UuidUtils;
+import com.hezhi3f.bloguser.util.TokenUtils;
+import com.hezhi3f.bloguser.util.CodeUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
-import java.util.Objects;
 
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, UserPO> implements UserService {
     @Override
     public Result<String> login(UserLoginDTO userLoginDTO) {
         String email = userLoginDTO.getEmail();
-        String checkCode = userLoginDTO.getCheckCode();
-        String password = userLoginDTO.getPassword();
 
         UserPO userPO = this.getOne(Wrappers.<UserPO>query().eq("email", email));
+        Assert.isNotNull(userPO, "该邮箱还未注册");
 
-        // 是否已经注册了
-        if (userPO == null) {
-            // 未注册，去注册
-            userPO = register(userLoginDTO);
-            // todo
+        if (userLoginDTO.getCheckCode() != null) {
+            String checkCode = "123456";
+            Assert.isEquals(checkCode, userLoginDTO.getCheckCode(), "验证码错误");
+        } else if (userLoginDTO.getPassword() != null) {
+            Assert.isEquals(userLoginDTO.getPassword(), userPO.getPassword(), "密码错误");
         } else {
-            return login(userLoginDTO, userPO);
-        }
-        return null;
-    }
-
-    @NotNull
-    private Result<String> login(UserLoginDTO userLoginDTO, UserPO userPO) {
-        String checkCode = userLoginDTO.getCheckCode();
-        String password = userLoginDTO.getPassword();
-        // 已注册，去登录
-        if (checkCode != null) {
-            // 使用redis缓存获取校验码比对
-            String checkCodeRedis = "123456";
-            if (!Objects.equals(checkCodeRedis, checkCode)) {
-                throw new BlogUserException("验证码错误");
-            }
-        } else if (password != null) {
-            if (!Objects.equals(password, userPO.getPassword())) {
-                throw new BlogUserException("邮箱或者密码错误");
-            }
-        } else {
-            throw new BlogUserException("验证码和密码必须存在一个");
+            // 前端传递的非法参数
+            throw new BlogUserException("参数错误");
         }
 
-        // 身份校验成功
-        userPO.setSecret(UuidUtils.uuid());
         userPO.setGmtModified(new Date());
-        boolean update = this.updateById(userPO);
-        if (!update) {
-            throw new BlogUserException("更新失败");
-        }
+        userPO.setSecret(CodeUtils.uuid());
 
-        // 生成token
-        // String token = TokenUtils.create(userPO);
-        String token = "ngouengdsgosofnf2n94nfdof98nrjef";
+        String token = TokenUtils.create(userPO);
         return ResultUtils.success(token);
-    }
-
-    private UserPO register(UserLoginDTO userLoginDTO) {
-        UserPO userPO = new UserPO();
-        String email = userLoginDTO.getEmail();
-
-        userPO.setEmail(email);
-        userPO.setNickname(getNickname(email));
-        userPO.setGmtCreated(new Date());
-        userPO.setPassword(userLoginDTO.getPassword());
-
-        boolean save = this.save(userPO);
-
-        if (!save) {
-            throw new BlogUserException("注册失败");
-        }
-        return userPO;
     }
 
     @NotNull
@@ -93,13 +50,29 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserPO> implements 
     }
 
     @Override
-    public void insert(UserPO userPO) {
+    public Result<String> signup(UserSignupDTO userSignupDTO) {
+        String checkCode = "123456";
+        Assert.isEquals(checkCode, userSignupDTO.getCheckCode(), "验证码错误");
+
+        String email = userSignupDTO.getEmail();
+
+        UserPO userPO = this.getOne(Wrappers.<UserPO>query().eq("email", email));
+
+        Assert.isNull(userPO, "邮箱已经被注册");
+
+        userPO = new UserPO();
+        userPO.setEmail(email);
+        userPO.setPassword(userSignupDTO.getPassword());
+
+
+        userPO.setNickname(getNickname(email));
         userPO.setGmtCreated(new Date());
-        if (userPO.getNickname() != null) {
-            userPO.setNickname(getNickname(userPO.getEmail()));
-        }
+        userPO.setSecret(CodeUtils.uuid());
 
-        userPO.setDeleted(false);
+        boolean save = this.save(userPO);
+        Assert.isTrue(save, "注册失败");
 
+        String token = TokenUtils.create(userPO);
+        return ResultUtils.success(token);
     }
 }

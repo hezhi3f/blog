@@ -7,18 +7,18 @@ import java.util.Optional;
 public abstract class AbstractValidator<T extends Annotation> implements Validator {
 
     @Override
-    public final Optional<RuntimeException> validate(Object obj, Field field) throws IllegalAccessException {
+    public final String validate(Object obj, Field field) throws IllegalAccessException {
         T t = field.getAnnotation(getAnnotationClass());
-        RuntimeException e = null;
+        String msg = null;
         if (t != null) {
             field.setAccessible(true);
             Object o = field.get(obj);
-            e = judge(o, t);
+            msg = judge(o, t);
         }
 
-        return Optional.ofNullable(e);
+        return msg;
     }
 
-    protected abstract RuntimeException judge(Object o, T t);
+    protected abstract String judge(Object o, T t);
     protected abstract Class<T> getAnnotationClass();
 }

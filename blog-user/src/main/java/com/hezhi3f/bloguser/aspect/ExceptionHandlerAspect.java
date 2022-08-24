@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 @Slf4j
 public class ExceptionHandlerAspect {
-
-
     @ExceptionHandler({BlogUserException.class})
     public Result<Void> handler(BlogUserException e) {
         if (log.isDebugEnabled()) {
