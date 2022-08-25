@@ -4,10 +4,7 @@ import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hezhi3f.bloguser.dao.UserMapper;
 import com.hezhi3f.bloguser.entity.result.Result;
-import com.hezhi3f.bloguser.entity.user.UserLoginDTO;
-import com.hezhi3f.bloguser.entity.user.UserPO;
-import com.hezhi3f.bloguser.entity.user.UserSignupDTO;
-import com.hezhi3f.bloguser.entity.user.UserUpdateDTO;
+import com.hezhi3f.bloguser.entity.user.*;
 import com.hezhi3f.bloguser.exception.BlogUserException;
 import com.hezhi3f.bloguser.service.UserService;
 import com.hezhi3f.bloguser.util.Assert;
@@ -26,7 +23,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserPO> implements 
         String email = userLoginDTO.getEmail();
 
         UserPO userPO = this.getOne(Wrappers.<UserPO>query().eq("email", email));
-        Assert.isNotNull(userPO, "该邮箱还未注册");
+        Assert.notNull(userPO, "该邮箱还未注册");
 
         if (userLoginDTO.getCheckCode() != null) {
             String checkCode = "123456";
@@ -41,6 +38,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserPO> implements 
         userPO.setGmtModified(new Date());
         userPO.setSecret(CodeUtils.uuid());
 
+        this.updateById(userPO);
         String token = TokenUtils.create(userPO);
         return ResultUtils.success(token);
     }
@@ -77,15 +75,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserPO> implements 
         Long id = userUpdateDTO.getId();
         UserPO userPO = this.getById(id);
 
-        Assert.isNotNull(userPO, "更新的用户id不存在");
+        Assert.notNull(userPO, "更新的用户id不存在");
 
         String oldPassword = userUpdateDTO.getOldPassword();
         String newPassword = userUpdateDTO.getNewPassword();
 
         List<String> list = new ArrayList<>(3);
         if (!Objects.isNull(oldPassword) || !Objects.isNull(newPassword)) {
-            Assert.isNotNull(oldPassword, "旧密码不能为空");
-            Assert.isNotNull(newPassword, "新密码不能为空");
+            Assert.notNull(oldPassword, "旧密码不能为空");
+            Assert.notNull(newPassword, "新密码不能为空");
             Assert.isEquals(oldPassword, userPO.getPassword(), "旧密码错误");
             if (!Objects.equals(oldPassword, newPassword)) {
                 userPO.setPassword(newPassword);
@@ -96,7 +94,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserPO> implements 
         String gender = userUpdateDTO.getGender();
         if (gender != null) {
             Assert.isTrue(Gender.isLegal(gender), "不合法的性别参数");
-            Integer g = Gender.getGender(gender);
+            Integer g = Gender.getGenderInt(gender);
             if (!Objects.equals(g, userPO.getGender())) {
                 userPO.setGender(g);
                 list.add("性别");
@@ -120,26 +118,37 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserPO> implements 
         return ResultUtils.success("未做任何改变");
     }
 
+    @Override
+    public Result<UserInfoVO> getInfo(Integer id) {
+        UserPO userPO = this.getById(id);
+        UserInfoVO userInfoVO = new UserInfoVO();
+
+        userInfoVO.setEmail(userPO.getEmail());
+        userInfoVO.setNickname(userPO.getNickname());
+        userInfoVO.setGender(Gender.getGenderStr(userPO.getGender()));
+        userInfoVO.setPassword("*".repeat(userPO.getPassword().length()));
+        userInfoVO.setGmtCreated(userPO.getGmtCreated());
+        userInfoVO.setGmtModified(userPO.getGmtModified());
+        return ResultUtils.success(userInfoVO);
+    }
+
     @NotNull
     private String getNickname(String email) {
         return "user_" + email.split("@")[0];
     }
 
     private static class Gender {
-        private static final Map<String, Integer> GENDER;
-
-        static {
-            GENDER = new HashMap<>(3);
-            GENDER.put("未知", 0);
-            GENDER.put("男", 1);
-            GENDER.put("女", 2);
-        }
+        private static final List<String> GENDER = Arrays.asList("未知", "男", "女");
 
         public static boolean isLegal(String gender) {
-            return GENDER.containsKey(gender);
+            return GENDER.contains(gender);
         }
 
-        public static Integer getGender(String gender) {
+        public static Integer getGenderInt(String gender) {
+            return GENDER.indexOf(gender);
+        }
+
+        public static String getGenderStr(Integer gender) {
             return GENDER.get(gender);
         }
     }

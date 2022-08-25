@@ -13,21 +13,21 @@ const SignupForm = () => {
   return (
 
     <Form
-      name="signup"
+      name='signup'
       onFinish={onFinish}
-      autoComplete="off"
+      autoComplete='off'
     >
-      <Form.Item name="username">
+      <Form.Item name='username'>
         <Input placeholder='邮箱' />
       </Form.Item>
 
-      <Form.Item name="password">
+      <Form.Item name='password'>
         <Input.Password placeholder='密码' />
       </Form.Item>
-      <Form.Item name="checkPassword">
+      <Form.Item name='checkPassword'>
         <Input.Password placeholder='确认密码' />
       </Form.Item>
-      <Form.Item name="checkCode">
+      <Form.Item name='checkCode'>
           <Row>
             <Col span={16}>
               <Input placeholder='验证码' />
@@ -38,7 +38,7 @@ const SignupForm = () => {
           </Row>
       </Form.Item>
       <Form.Item >
-        <Button type="primary" htmlType="submit" block>立即注册</Button>
+        <Button type='primary' htmlType='submit' block>立即注册</Button>
       </Form.Item>
     </Form>
   )

@@ -2,10 +2,7 @@ package com.hezhi3f.bloguser.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.hezhi3f.bloguser.entity.result.Result;
-import com.hezhi3f.bloguser.entity.user.UserLoginDTO;
-import com.hezhi3f.bloguser.entity.user.UserPO;
-import com.hezhi3f.bloguser.entity.user.UserSignupDTO;
-import com.hezhi3f.bloguser.entity.user.UserUpdateDTO;
+import com.hezhi3f.bloguser.entity.user.*;
 
 public interface UserService extends IService<UserPO> {
 
@@ -15,4 +12,5 @@ public interface UserService extends IService<UserPO> {
 
     Result<String> update(UserUpdateDTO userUpdateDTO);
 
+    Result<UserInfoVO> getInfo(Integer id);
 }

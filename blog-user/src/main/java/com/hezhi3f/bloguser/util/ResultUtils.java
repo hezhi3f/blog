@@ -24,5 +24,13 @@ public class ResultUtils {
         r.setMsg(msg);
         return r;
     }
+
+    public static <T> Result<T> error(Integer code, String msg) {
+        Result<T> r = new Result<>();
+        r.setCode(code);
+        r.setOk(false);
+        r.setMsg(msg);
+        return r;
+    }
 }
 

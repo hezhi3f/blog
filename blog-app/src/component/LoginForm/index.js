@@ -1,15 +1,17 @@
 import React from 'react'
-import { Button, Form, Input } from 'antd';
-import CheckCodeItem from './CheckCodeItem';
-import PasswordItem from './PasswordItem';
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { Button, Form, Input, message } from 'antd'
+import CheckCodeItem from './CheckCodeItem'
+import PasswordItem from './PasswordItem'
+import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
 
 const LoginFrom = (props) => {
   const { flag } = props
+  console.log(flag);
   const navigate = useNavigate()
 
   const onFinish = (values) => {
+    console.log(values);
     axios({
       method: 'post',
       data: values,
@@ -21,25 +23,27 @@ const LoginFrom = (props) => {
         window.sessionStorage.setItem('token', data)
         navigate('/')
       } else {
-        alert(code + msg)
+        message.error(`${msg}[${code}]`)
       }
     })
   }
+
   return (
     <Form
       name={flag}
       onFinish={onFinish}
-      autoComplete="off"
+      initialValues={{'email': '123@qq.com' }}
+      autoComplete='off'
     >
-      <Form.Item name="email">
+      <Form.Item name='email'>
         <Input placeholder='邮箱' />
       </Form.Item>
       {
-        flag === "checkCode" ? <CheckCodeItem /> :
-          flag === "password" ? <PasswordItem /> : <></>
+        flag === 'checkCode' ? <CheckCodeItem/> :
+          flag === 'password' ? <PasswordItem/> : <></>
       }
       <Form.Item>
-        <Button type="primary" htmlType="submit" block>登录</Button>
+        <Button type='primary' htmlType='submit' block>登录</Button>
       </Form.Item>
     </Form>
   )

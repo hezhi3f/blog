@@ -11,7 +11,7 @@ public class Assert {
         }
     }
 
-    public static void isNotEquals(Object o1, Object o2, String msg) {
+    public static void notEquals(Object o1, Object o2, String msg) {
         if (Objects.equals(o1, o2)) {
             throw new BlogUserException(msg);
         }
@@ -23,7 +23,13 @@ public class Assert {
         }
     }
 
-    public static void isNotNull(Object o, String msg) {
+    public static void isFalse(boolean b, String msg) {
+        if (b) {
+            throw new BlogUserException(msg);
+        }
+    }
+
+    public static void notNull(Object o, String msg) {
         if (o == null) {
             throw new BlogUserException(msg);
         }

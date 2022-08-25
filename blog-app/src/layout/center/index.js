@@ -4,8 +4,8 @@ import './index.css'
 function Center(props) {
   const { children } = props
   return (
-    <div className={"loginOut"}>
-      <div className={"loginIn"}>
+    <div className={'loginOut'}>
+      <div className={'loginIn'}>
         {children}
       </div>
     </div>

@@ -1,17 +1,28 @@
 import React from 'react'
-import { Button, Layout } from 'antd';
+import { Layout, Row, Col } from 'antd' 
 import './index.css'
+import UserCenter from '../../component/UserCenter' 
+import { useNavigate } from 'react-router-dom' 
 
 const { Header } = Layout
+
+
 const HeaderLayout = () => {
-  const logout = () => {
-    window.sessionStorage.removeItem("login")
-    window.sessionStorage.removeItem("token")
-    window.location.reload()
-  }
+  const navigate = useNavigate()
+
   return (
     <Header className='header'>
-      <Button type='primary' onClick={logout}>退出登录</Button>
+      <Row>
+        <Col span={2}>
+          <div className='logo' onClick={() => { navigate('/') }} />
+        </Col>
+        <Col span={21}>
+          <span />
+        </Col>
+        <Col span={1}>
+          <UserCenter />
+        </Col>
+      </Row>
     </Header>
   )
 
