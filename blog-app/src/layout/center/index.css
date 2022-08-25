@@ -7,9 +7,8 @@
 }
 
 .loginIn {
-  width: 25vw;
-  min-width: 300px;
-  box-shadow: 0 0 20px gray;
+  width: 360px;
+  box-shadow: 0 0 20px rgb(0, 0, 0, 10%);
   border-radius: 16px;
   /* 上 右 下 左*/
   padding: 50px 50px 10px 50px;

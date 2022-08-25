@@ -1,19 +1,17 @@
 import React from 'react'
-import { Layout, Menu } from 'antd';
+import { Button, Layout } from 'antd';
 import './index.css'
 
 const { Header } = Layout
 const HeaderLayout = () => {
+  const logout = () => {
+    window.sessionStorage.removeItem("login")
+    window.sessionStorage.removeItem("token")
+    window.location.reload()
+  }
   return (
     <Header className='header'>
-      <Menu
-        mode="horizontal"
-        defaultSelectedKeys={['2']}
-        items={new Array(7).fill(null).map((_, index) => ({
-          key: String(index + 1),
-          label: `nav ${index + 1}`,
-        }))}
-      />
+      <Button type='primary' onClick={logout}>退出登录</Button>
     </Header>
   )
 
