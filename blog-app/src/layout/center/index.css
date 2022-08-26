@@ -4,14 +4,17 @@
   align-items: center;
   width: 100vw;
   height: 100vh;
-  background-image: url('../../image/login-background.jpg');
+  background-image: url('../../image/login-background.png');
+  background-size: cover;
 }
 
 .loginIn {
+  opacity: 0.9;
   width: 360px;
-  box-shadow: 0 0 20px rgb(0, 0, 0, 10%);
+  box-shadow: 0 0 20px black;
+  border: 1px solid black;
   border-radius: 16px;
-  background-color: rgb(255,255,255,90%);
+  background-color: white;
   /* 上 右 下 左*/
   padding: 50px 50px 10px 50px;
 }

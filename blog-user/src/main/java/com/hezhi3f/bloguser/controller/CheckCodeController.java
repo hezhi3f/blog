@@ -13,20 +13,19 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/checkCode")
+@RequestMapping("/verify")
 public class CheckCodeController {
     private final RedisService redisService;
 
-    @PostMapping("/checkEmail")
-    public Result<String> checkEmail(@Validated @RequestBody UserEmailDTO userEmailDTO) {
+    @PostMapping("/email")
+    public Result<String> email(@Validated @RequestBody UserEmailDTO userEmailDTO) {
         String email = userEmailDTO.getEmail();
-        System.out.println(email);
         String checkCode = CodeUtils.num6();
 
         redisService.setCheckCode(email, checkCode);
-        // send email
+        // todo send email
         
-        return ResultUtils.success(checkCode);
+        return ResultUtils.success();
     }
 
     @Autowired

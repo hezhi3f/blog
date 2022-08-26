@@ -19,6 +19,17 @@ public class RedisServiceImpl implements RedisService {
         ops.set("blog:email:" + email, checkCode, 10, TimeUnit.MINUTES);
     }
 
+    @Override
+    public String getCheckCode(String email) {
+        ValueOperations<String, String> ops = template.opsForValue();
+        return ops.get("blog:email:" + email);
+    }
+
+    @Override
+    public void delete(String email) {
+        template.opsForValue().getAndDelete("blog:email:" + email);
+    }
+
 
     @Autowired
     public RedisServiceImpl(StringRedisTemplate template) {

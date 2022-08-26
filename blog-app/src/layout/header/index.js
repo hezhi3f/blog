@@ -25,7 +25,6 @@ const HeaderLayout = () => {
       </Row>
     </Header>
   )
-
 }
 
 export default HeaderLayout

@@ -16,9 +16,7 @@ const api = (url, data = {}, func = () => { }) => {
           message.error(`${msg}[${code}]`)
           if (code === 500) {
             window.sessionStorage.clear()
-            setTimeout(() => {
-              window.location.reload()
-            }, 1000);
+            window.location.reload()
           }
         }
       }

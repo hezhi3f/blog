@@ -13,6 +13,7 @@
 
     <modules>
         <module>blog-user</module>
+        <module>common</module>
     </modules>
 
     <groupId>com.hezhi3f</groupId>

@@ -6,18 +6,27 @@ import com.hezhi3f.bloguser.dao.UserMapper;
 import com.hezhi3f.bloguser.entity.result.Result;
 import com.hezhi3f.bloguser.entity.user.*;
 import com.hezhi3f.bloguser.exception.BlogUserException;
+import com.hezhi3f.bloguser.service.RedisService;
 import com.hezhi3f.bloguser.service.UserService;
 import com.hezhi3f.bloguser.util.Assert;
 import com.hezhi3f.bloguser.util.CodeUtils;
 import com.hezhi3f.bloguser.util.ResultUtils;
 import com.hezhi3f.bloguser.util.TokenUtils;
 import org.jetbrains.annotations.NotNull;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Service
 public class UserServiceImpl extends ServiceImpl<UserMapper, UserPO> implements UserService {
+    private final RedisService redisService;
+
+    @Autowired
+    public UserServiceImpl(RedisService redisService) {
+        this.redisService = redisService;
+    }
+
     @Override
     public Result<String> login(UserLoginDTO userLoginDTO) {
         String email = userLoginDTO.getEmail();
@@ -26,8 +35,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserPO> implements 
         Assert.notNull(userPO, "该邮箱还未注册");
 
         if (userLoginDTO.getCheckCode() != null) {
-            String checkCode = "123456";
+            String checkCode = redisService.getCheckCode(email);
             Assert.isEquals(checkCode, userLoginDTO.getCheckCode(), "验证码错误");
+            redisService.delete(email);
         } else if (userLoginDTO.getPassword() != null) {
             Assert.isEquals(userLoginDTO.getPassword(), userPO.getPassword(), "密码错误");
         } else {
@@ -45,19 +55,20 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserPO> implements 
 
     @Override
     public Result<String> signup(UserSignupDTO userSignupDTO) {
-        String checkCode = "123456";
+        String email = userSignupDTO.getEmail();
+        UserPO userPO = this.getOne(Wrappers.<UserPO>query().eq("email", email));
+        Assert.isNull(userPO, "邮箱已经被注册");
+
+        String checkCode = redisService.getCheckCode(email);
         Assert.isEquals(checkCode, userSignupDTO.getCheckCode(), "验证码错误");
 
-        String email = userSignupDTO.getEmail();
-
-        UserPO userPO = this.getOne(Wrappers.<UserPO>query().eq("email", email));
-
-        Assert.isNull(userPO, "邮箱已经被注册");
+        String password = userSignupDTO.getPassword();
+        String checkPassword = userSignupDTO.getCheckPassword();
+        Assert.isEquals(password, checkPassword, "两次密码输入不一致");
 
         userPO = new UserPO();
         userPO.setEmail(email);
-        userPO.setPassword(userSignupDTO.getPassword());
-
+        userPO.setPassword(password);
 
         userPO.setNickname(getNickname(email));
         userPO.setGmtCreated(new Date());
