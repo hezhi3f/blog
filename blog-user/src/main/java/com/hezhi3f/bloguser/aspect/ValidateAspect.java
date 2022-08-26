@@ -1,8 +1,8 @@
 package com.hezhi3f.bloguser.aspect;
 
-import com.hezhi3f.bloguser.util.Assert;
-import com.hezhi3f.bloguser.validate.annotation.Validated;
-import com.hezhi3f.bloguser.validate.validator.Validator;
+import com.hezhi3f.common.util.Assert;
+import com.hezhi3f.common.validate.annotation.Validated;
+import com.hezhi3f.common.validate.validator.Validator;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;

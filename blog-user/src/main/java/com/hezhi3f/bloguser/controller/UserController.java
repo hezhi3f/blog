@@ -1,13 +1,15 @@
 package com.hezhi3f.bloguser.controller;
 
-import com.hezhi3f.bloguser.entity.result.Result;
-import com.hezhi3f.bloguser.entity.user.UserInfoVO;
-import com.hezhi3f.bloguser.entity.user.UserLoginDTO;
-import com.hezhi3f.bloguser.entity.user.UserSignupDTO;
-import com.hezhi3f.bloguser.entity.user.UserUpdateDTO;
+
 import com.hezhi3f.bloguser.service.UserService;
-import com.hezhi3f.bloguser.util.ResultUtils;
-import com.hezhi3f.bloguser.validate.annotation.Validated;
+
+import com.hezhi3f.common.entity.result.Result;
+import com.hezhi3f.common.entity.user.UserInfoVO;
+import com.hezhi3f.common.entity.user.UserLoginDTO;
+import com.hezhi3f.common.entity.user.UserSignupDTO;
+import com.hezhi3f.common.entity.user.UserUpdateDTO;
+import com.hezhi3f.common.util.ResultUtils;
+import com.hezhi3f.common.validate.annotation.Validated;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

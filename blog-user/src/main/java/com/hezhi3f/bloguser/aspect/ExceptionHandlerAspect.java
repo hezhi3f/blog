@@ -1,12 +1,9 @@
 package com.hezhi3f.bloguser.aspect;
 
-import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
-import com.auth0.jwt.exceptions.SignatureVerificationException;
-import com.auth0.jwt.exceptions.TokenExpiredException;
-import com.hezhi3f.bloguser.entity.result.Result;
-import com.hezhi3f.bloguser.exception.BlogUserException;
-import com.hezhi3f.bloguser.util.ResultUtils;
+import com.hezhi3f.common.entity.result.Result;
+import com.hezhi3f.common.exception.BlogException;
+import com.hezhi3f.common.util.ResultUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -17,8 +14,8 @@ public class ExceptionHandlerAspect {
     private static final Integer TOKEN_ERROR_CODE = 500;
 
 
-    @ExceptionHandler({BlogUserException.class})
-    public Result<Void> handler(BlogUserException e) {
+    @ExceptionHandler({BlogException.class})
+    public Result<Void> handler(BlogException e) {
         if (log.isDebugEnabled()) {
             log.debug(e.getMessage(), e);
         } else {

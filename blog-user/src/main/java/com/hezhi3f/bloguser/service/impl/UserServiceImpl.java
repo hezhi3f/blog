@@ -3,15 +3,15 @@ package com.hezhi3f.bloguser.service.impl;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hezhi3f.bloguser.dao.UserMapper;
-import com.hezhi3f.bloguser.entity.result.Result;
-import com.hezhi3f.bloguser.entity.user.*;
-import com.hezhi3f.bloguser.exception.BlogUserException;
 import com.hezhi3f.bloguser.service.RedisService;
 import com.hezhi3f.bloguser.service.UserService;
-import com.hezhi3f.bloguser.util.Assert;
-import com.hezhi3f.bloguser.util.CodeUtils;
-import com.hezhi3f.bloguser.util.ResultUtils;
-import com.hezhi3f.bloguser.util.TokenUtils;
+import com.hezhi3f.common.entity.result.Result;
+import com.hezhi3f.common.entity.user.*;
+import com.hezhi3f.common.exception.BlogException;
+import com.hezhi3f.common.util.Assert;
+import com.hezhi3f.common.util.CodeUtils;
+import com.hezhi3f.common.util.ResultUtils;
+import com.hezhi3f.common.util.TokenUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,7 +32,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserPO> implements 
         String email = userLoginDTO.getEmail();
 
         UserPO userPO = this.getOne(Wrappers.<UserPO>query().eq("email", email));
-        Assert.notNull(userPO, "该邮箱还未注册");
+        Assert.isExist(userPO, "该邮箱还未注册");
 
         if (userLoginDTO.getCheckCode() != null) {
             String checkCode = redisService.getCheckCode(email);
@@ -42,7 +42,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserPO> implements 
             Assert.isEquals(userLoginDTO.getPassword(), userPO.getPassword(), "密码错误");
         } else {
             // 前端传递的非法参数
-            throw new BlogUserException("参数错误");
+            throw new BlogException("参数错误");
         }
 
         userPO.setGmtModified(new Date());
@@ -86,15 +86,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserPO> implements 
         Long id = userUpdateDTO.getId();
         UserPO userPO = this.getById(id);
 
-        Assert.notNull(userPO, "更新的用户id不存在");
+        Assert.isExist(userPO, "更新的用户id不存在");
 
         String oldPassword = userUpdateDTO.getOldPassword();
         String newPassword = userUpdateDTO.getNewPassword();
 
         List<String> list = new ArrayList<>(3);
         if (!Objects.isNull(oldPassword) || !Objects.isNull(newPassword)) {
-            Assert.notNull(oldPassword, "旧密码不能为空");
-            Assert.notNull(newPassword, "新密码不能为空");
+            Assert.isExist(oldPassword, "旧密码不能为空");
+            Assert.isExist(newPassword, "新密码不能为空");
             Assert.isEquals(oldPassword, userPO.getPassword(), "旧密码错误");
             if (!Objects.equals(oldPassword, newPassword)) {
                 userPO.setPassword(newPassword);

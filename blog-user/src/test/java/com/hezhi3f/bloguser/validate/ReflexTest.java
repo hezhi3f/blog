@@ -1,6 +1,6 @@
 package com.hezhi3f.bloguser.validate;
 
-import com.hezhi3f.bloguser.entity.user.UserLoginDTO;
+import com.hezhi3f.common.entity.user.UserLoginDTO;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 

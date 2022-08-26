@@ -1,6 +1,6 @@
 package com.hezhi3f.common.validate.validator;
 
-import com.hezhi3f.bloguser.validate.annotation.Type;
+import com.hezhi3f.common.validate.annotation.Type;
 import org.springframework.stereotype.Component;
 
 import java.util.HashMap;

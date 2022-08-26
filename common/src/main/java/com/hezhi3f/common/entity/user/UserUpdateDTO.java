@@ -1,8 +1,8 @@
 package com.hezhi3f.common.entity.user;
 
-import com.hezhi3f.bloguser.validate.annotation.Length;
-import com.hezhi3f.bloguser.validate.annotation.RegexEnum;
-import com.hezhi3f.bloguser.validate.annotation.Type;
+import com.hezhi3f.common.validate.annotation.Length;
+import com.hezhi3f.common.validate.annotation.RegexEnum;
+import com.hezhi3f.common.validate.annotation.Type;
 import lombok.Data;
 
 @Data

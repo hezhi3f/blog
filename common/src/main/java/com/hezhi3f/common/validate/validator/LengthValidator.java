@@ -1,6 +1,6 @@
 package com.hezhi3f.common.validate.validator;
 
-import com.hezhi3f.bloguser.validate.annotation.Length;
+import com.hezhi3f.common.validate.annotation.Length;
 import org.springframework.stereotype.Component;
 
 @Component
