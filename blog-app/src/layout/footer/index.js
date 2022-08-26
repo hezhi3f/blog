@@ -5,9 +5,7 @@ import './index.css'
 const { Footer } = Layout
 const FooterLayout = () => {
   return (
-    <Footer className='footer'>
-      Hello,world
-    </Footer>
+    <Footer className='footer'>河之博客 ©2022 Created by He Zhi 3F</Footer>
   )
 }
 

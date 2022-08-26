@@ -8,7 +8,7 @@ import java.util.Calendar;
 
 public class TokenUtils {
     public static String create(UserPO userPO) {
-        return create(userPO, Calendar.MINUTE, 1);
+        return create(userPO, Calendar.HOUR, 1);
     }
 
     public static String create(UserPO userPO, int yield, int value) {

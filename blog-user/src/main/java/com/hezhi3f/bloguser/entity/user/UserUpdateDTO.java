@@ -2,13 +2,11 @@ package com.hezhi3f.bloguser.entity.user;
 
 import com.hezhi3f.bloguser.validate.annotation.Length;
 import com.hezhi3f.bloguser.validate.annotation.RegexEnum;
-import com.hezhi3f.bloguser.validate.annotation.Required;
 import com.hezhi3f.bloguser.validate.annotation.Type;
 import lombok.Data;
 
 @Data
 public class UserUpdateDTO {
-    @Required(msg = "修改用户的id不能为空")
     private Long id;
     private String gender;
     private String oldPassword;

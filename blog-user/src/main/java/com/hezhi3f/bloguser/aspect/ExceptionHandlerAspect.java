@@ -1,5 +1,7 @@
 package com.hezhi3f.bloguser.aspect;
 
+import com.auth0.jwt.exceptions.JWTDecodeException;
+import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.exceptions.SignatureVerificationException;
 import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.hezhi3f.bloguser.entity.result.Result;
@@ -25,16 +27,10 @@ public class ExceptionHandlerAspect {
         return ResultUtils.error(e.getMessage());
     }
 
-    @ExceptionHandler({SignatureVerificationException.class})
-    public Result<Void> handler(SignatureVerificationException e) {
-        String msg = "token验证失败";
-        log.info(msg + ":" + e.getMessage());
-        return ResultUtils.error(TOKEN_ERROR_CODE, msg);
-    }
+    @ExceptionHandler({JWTVerificationException.class})
+    public Result<Void> handler(JWTVerificationException e) {
+        String msg = "认证信息出错，或者认证信息已过期！";
 
-    @ExceptionHandler({TokenExpiredException.class})
-    public Result<Void> handler(TokenExpiredException e) {
-        String msg = "token已过期";
         log.info(msg + ":" + e.getMessage());
         return ResultUtils.error(TOKEN_ERROR_CODE, msg);
     }

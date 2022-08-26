@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { message, Descriptions, Button } from 'antd'
 import axios from 'axios'
+import api from '../../util/Api'
 
 const { Item } = Descriptions
 const UserDetail = () => {
@@ -18,23 +19,11 @@ const UserDetail = () => {
   })
 
   useEffect(() => {
-    const token = window.sessionStorage.getItem('token')
-    axios({
-      method: 'post',
-      url: '/user/info',
-      headers: { token: token },
-    }).then(res => {
-      const { code, ok, data, msg } = res.data
-      if (ok) {
-        setUser(data)
-      } else {
-        message.error(`${msg}[${code}]`)
-      }
-    })
+    api('/user/info', {}, setUser)
   }, [])
 
   const handleUpdate = () => {
-    navigate('/update')
+    navigate('/update', { state: user })
   }
 
   return (

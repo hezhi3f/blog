@@ -1,6 +1,6 @@
-import React, { useEffect } from "react" 
-import Route from "./route" 
-import { useNavigate, useLocation } from 'react-router-dom' 
+import React, { useEffect } from "react"
+import Route from "./route"
+import { useNavigate, useLocation } from 'react-router-dom'
 
 
 const App = () => {
@@ -8,7 +8,7 @@ const App = () => {
   const location = useLocation()
 
   useEffect(() => {
-    // todo 这里可以获得cookie判断是否登录成功
+    // 过滤掉登录和注册
     if (['/login', '/signup'].indexOf(location.pathname) !== -1) {
       return
     }
@@ -16,8 +16,6 @@ const App = () => {
     if (window.sessionStorage.getItem('login') !== 'true') {
       navigate('/login')
     }
-
-    
   })
   return (
     <Route />

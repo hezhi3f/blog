@@ -27,7 +27,10 @@ public class UserController {
     }
 
     @PostMapping("/update")
-    public Result<String> update(@Validated @RequestBody UserUpdateDTO userUpdateDTO) {
+    public Result<String> update(
+            @Validated @RequestBody UserUpdateDTO userUpdateDTO,
+            @RequestAttribute("id") Long id) {
+        userUpdateDTO.setId(id);
         return userService.update(userUpdateDTO);
     }
 

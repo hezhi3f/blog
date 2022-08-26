@@ -1,12 +1,18 @@
 import React, { useState } from 'react'
 import BasicItem from './BasicItem'
 import PasswordItem from './PasswordItem'
-import { Form, Button } from 'antd'
+import { Form, Button, message } from 'antd'
+import api from '../../util/Api'
+import { useNavigate } from 'react-router-dom'
 
 const UpdateForm = (props) => {
-  const { type } = props
-  const onFinish = (value) => {
-    console.log('value', value);
+  const navigate = useNavigate()
+  const { type, user } = props
+  const onFinish = (values) => {
+    api('user/update', values, data => {
+      message.success(data)
+      navigate(-1)
+    })
   }
 
   return (
@@ -16,6 +22,7 @@ const UpdateForm = (props) => {
       wrapperCol={{ span: 20 }}
       onFinish={onFinish}
       autoComplete="off"
+      initialValues={user}
     >
       {
         type === 'password' ? <PasswordItem /> :
