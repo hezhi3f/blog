@@ -6,7 +6,7 @@ import CenterMenu from './CenterMenu'
 const UserCenter = () => {
   return (
     <Dropdown overlay={<CenterMenu />} placement='bottom'>
-      <Avatar icon={<UserOutlined />} style={{ backgroundColor: '#288063' }} size='large' />
+      <Avatar icon={<UserOutlined />} style={{ backgroundColor: '#288063' }} size={32} />
     </Dropdown>
   )
 }

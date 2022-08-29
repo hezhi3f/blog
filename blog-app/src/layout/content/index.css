@@ -1,7 +1,6 @@
 .content {
-  padding: 20px 100px;
-  margin: 64px auto 0;
-  width: 61.8vw;
-  min-height: calc(100vh - 134px) !important;
-  background-color: white;
+  margin: 56px auto 0;
+  min-height: calc(100vh - 56px) !important;
+  box-shadow: 0 0 3px rgba(0, 0, 0, 0.1);
+  background-color: #f6f6f6;
 }

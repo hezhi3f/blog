@@ -48,9 +48,10 @@ public class ArticleServiceImpl
     @Override
     @Transactional
     public Result<ArticleVO> getArticleVOByArticleId(Long articleId) {
+        Assert.isNotNull(articleId, "articleId不能为空");
         ArticleVO vo = new ArticleVO();
         ArticlePO po = this.getById(articleId);
-        Assert.isExist(po, "文章不存在");
+        Assert.isNotNull(po, "文章不存在");
         // todo 未被删除
         Assert.isFalse(po.getDeleted(), "文章已被删除");
         // todo feign get username

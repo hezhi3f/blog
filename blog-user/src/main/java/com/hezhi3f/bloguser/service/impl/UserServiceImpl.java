@@ -32,7 +32,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserPO> implements 
         String email = userLoginDTO.getEmail();
 
         UserPO userPO = this.getOne(Wrappers.<UserPO>query().eq("email", email));
-        Assert.isExist(userPO, "该邮箱还未注册");
+        Assert.isNotNull(userPO, "该邮箱还未注册");
 
         if (userLoginDTO.getCheckCode() != null) {
             String checkCode = redisService.getCheckCode(email);
@@ -86,15 +86,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserPO> implements 
         Long id = userUpdateDTO.getId();
         UserPO userPO = this.getById(id);
 
-        Assert.isExist(userPO, "更新的用户id不存在");
+        Assert.isNotNull(userPO, "更新的用户id不存在");
 
         String oldPassword = userUpdateDTO.getOldPassword();
         String newPassword = userUpdateDTO.getNewPassword();
 
         List<String> list = new ArrayList<>(3);
         if (!Objects.isNull(oldPassword) || !Objects.isNull(newPassword)) {
-            Assert.isExist(oldPassword, "旧密码不能为空");
-            Assert.isExist(newPassword, "新密码不能为空");
+            Assert.isNotNull(oldPassword, "旧密码不能为空");
+            Assert.isNotNull(newPassword, "新密码不能为空");
             Assert.isEquals(oldPassword, userPO.getPassword(), "旧密码错误");
             if (!Objects.equals(oldPassword, newPassword)) {
                 userPO.setPassword(newPassword);

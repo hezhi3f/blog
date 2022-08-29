@@ -6,7 +6,9 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScans;
 
 @SpringBootApplication
-@ComponentScans(@ComponentScan({"com.hezhi3f.common"}))
+@ComponentScans({
+        @ComponentScan("com.hezhi3f.common")
+})
 public class BlogUserApplication {
 
     public static void main(String[] args) {

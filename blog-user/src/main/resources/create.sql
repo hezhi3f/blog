@@ -1,4 +1,3 @@
-create database `blog`;
 use `blog`;
 
 drop table if exists `blog_user`;

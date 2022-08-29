@@ -1,30 +1,15 @@
 import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { message, Descriptions, Button } from 'antd'
-import axios from 'axios'
+import { Descriptions, Spin } from 'antd'
 import api from '../../util/Api'
+import Extra from './Extra'
 
 const { Item } = Descriptions
 const UserDetail = () => {
-
-  const navigate = useNavigate()
-
-  const [user, setUser] = useState({
-    email: '邮箱',
-    gender: '性别',
-    nickname: '昵称',
-    password: '密码',
-    gmtCreated: '创建时间',
-    gmtModified: '上次修改时间'
-  })
+  const [user, setUser] = useState({})
 
   useEffect(() => {
     api('/user/info', {}, setUser)
   }, [])
-
-  const handleUpdate = () => {
-    navigate('/update', { state: user })
-  }
 
   return (
     <Descriptions
@@ -32,7 +17,8 @@ const UserDetail = () => {
       layout='vertical'
       bordered
       size='small'
-      extra={<Button onClick={handleUpdate}>修改信息</Button>}>
+      extra={<Extra />}
+    >
       <Item label='邮箱'>{user.email}</Item>
       <Item label='昵称'>{user.nickname}</Item>
       <Item label='性别'>{user.gender}</Item>

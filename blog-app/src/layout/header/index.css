@@ -2,13 +2,15 @@
   position: fixed;
   z-index: 1;
   width: 100%;
+  height: 48px !important;
+  line-height: 48px !important;
   background-color: white !important;
   box-shadow: 0 1px 3px rgb(18 18 18 / 10%);
 }
 
 .logo {
-  width: 128px;
-  height: 64px;
+  width: 96px;
+  height: 48px;
   background-image: url('../../image/logo.jpg') ;
   /* 让背景图基于容器大小伸缩 */
   background-size: cover;

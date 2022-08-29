@@ -14,7 +14,7 @@ public class UserLoginDTO {
     @Length(min = 6, max = 36, msg = "请输入长度为6到36位的邮箱")
     private String email;
 
-    @Length(min = 8, max = 36, msg = "请输入长度为8到36位的密码")
+    @Length(min = 6, max = 36, msg = "请输入长度为6到36位的密码")
     @Type(regex = RegexEnum.PASSWORD, msg = "密码只能为字母、数字、.~!@#$%^&*等特殊字符组成")
     private String password;
 

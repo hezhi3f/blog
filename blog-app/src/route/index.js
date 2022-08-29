@@ -1,5 +1,6 @@
 import React from 'react'
 import { useRoutes } from 'react-router-dom'
+import ArticlePage from '../page/article/ArticlePage'
 import InfoPage from '../page/info'
 import LoginPage from '../page/login'
 import MainPage from '../page/main'
@@ -12,7 +13,8 @@ const Route = () => {
     { path: '/login', element: <LoginPage /> },
     { path: '/signup', element: <SignupPage /> },
     { path: '/info', element: <InfoPage /> },
-    { path: '/update', element: <UpdatePage /> }
+    { path: '/update', element: <UpdatePage /> },
+    { path: '/create', element: <ArticlePage /> },
   ])
 }
 

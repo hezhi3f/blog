@@ -29,7 +29,7 @@ public class Assert {
         }
     }
 
-    public static void isExist(Object o, String msg) {
+    public static void isNotNull(Object o, String msg) {
         if (o == null) {
             throw new BlogException(msg);
         }

@@ -12,7 +12,7 @@ const Common = (props) => {
       <ContentLayout >
         {children}
       </ContentLayout>
-      <FooterLayout />
+      {/* <FooterLayout /> */}
     </Layout>
   )
 }

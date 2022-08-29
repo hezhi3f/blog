@@ -4,6 +4,7 @@ import com.hezhi3f.blogarticle.service.ArticleService;
 import com.hezhi3f.common.entity.article.ArticleCreateDTO;
 import com.hezhi3f.common.entity.article.ArticleVO;
 import com.hezhi3f.common.entity.result.Result;
+import com.hezhi3f.common.validate.annotation.Validated;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,7 +15,7 @@ public class ArticleController {
 
     @PostMapping("/create")
     public Result<Void> create(
-            @RequestBody ArticleCreateDTO articleCreateDTO) {
+            @Validated @RequestBody ArticleCreateDTO articleCreateDTO) {
 //        @RequestAttribute("id") Long id
         return articleService.create(articleCreateDTO);
     }

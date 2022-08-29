@@ -23,7 +23,7 @@ public class AuthorityInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String token = request.getHeader("token");
-        Assert.isExist(token, "认证信息token不存在，权限不足");
+        Assert.isNotNull(token, "认证信息token不存在，权限不足");
         log.info("token: {}", token);
         DecodedJWT jwt = JWT.decode(token);
         Integer id = jwt.getClaim("id").asInt();
@@ -31,7 +31,7 @@ public class AuthorityInterceptor implements HandlerInterceptor {
 
         UserPO userPO = userService.getOne(Wrappers.<UserPO>query().eq("id", id).eq("email", email));
 
-        Assert.isExist(userPO, "错误的token参数");
+        Assert.isNotNull(userPO, "错误的token参数");
         Assert.isFalse(userPO.getDeleted(), "用户已经注销");
         TokenUtils.verify(token, userPO.getSecret());
 

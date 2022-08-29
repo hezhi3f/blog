@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import BasicItem from './BasicItem'
 import PasswordItem from './PasswordItem'
 import { Form, Button, message } from 'antd'
@@ -7,7 +7,8 @@ import { useNavigate } from 'react-router-dom'
 
 const UpdateForm = (props) => {
   const navigate = useNavigate()
-  const { type, user } = props
+  const [form] = Form.useForm()
+  const { type } = props
   const onFinish = (values) => {
     api('user/update', values, data => {
       message.success(data)
@@ -15,19 +16,21 @@ const UpdateForm = (props) => {
     })
   }
 
+  useEffect(() => {
+    api('/user/info', {}, form.setFieldsValue)
+  }, [])
+
   return (
     <Form
       name='update'
+      form={form}
       labelCol={{ span: 4 }}
       wrapperCol={{ span: 20 }}
       onFinish={onFinish}
       autoComplete="off"
-      initialValues={user}
     >
-      {
-        type === 'password' ? <PasswordItem /> :
-          type === 'basic' ? <BasicItem /> : <></>
-      }
+      {type === 'password' && <PasswordItem />}
+      {type === 'basic' && <BasicItem />}
       <Form.Item wrapperCol={{ offset: 4, span: 20 }}>
         <Button type='primary' htmlType='submit'>提交</Button>
       </Form.Item>

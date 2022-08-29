@@ -20,6 +20,4 @@ public class ArticleCreateDTO {
     private String kind;
     private List<String> tags;
     private Date gmtCreated;
-    private Date gmtModified;
-    private Boolean deleted;
 }

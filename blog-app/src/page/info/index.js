@@ -1,10 +1,14 @@
 import React from 'react'
 import UserDetail from '../../component/UserDetail'
 import Common from '../../layout/common'
+import './index.css'
+
 const InfoPage = () => {
   return (
     <Common>
-      <UserDetail />
+      <div className='info'>
+        <UserDetail />
+      </div>
     </Common>
   )
 }
