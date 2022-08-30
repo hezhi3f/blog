@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.hezhi3f.blog.common.aspect.ValidateAspect,\
+com.hezhi3f.blog.common.aspect.ExceptionHandlerAspect

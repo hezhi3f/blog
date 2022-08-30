@@ -55,3 +55,8 @@ docker
 博文的信息包括多个标签、一个分类、信息、阅读量、点赞数
 
 
+### 权限认证微服务
+
+userid？email？secret？login？
+
+
