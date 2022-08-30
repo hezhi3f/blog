@@ -13,7 +13,9 @@
 
     <modules>
         <module>blog-user</module>
+        <module>blog-article</module>
         <module>common</module>
+        <module>gateway</module>
     </modules>
 
     <groupId>com.hezhi3f</groupId>

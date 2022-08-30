@@ -1,0 +1,15 @@
+server:
+  port: 0
+spring:
+  application:
+    name: BLOG-ARTICLE-SERVICE
+  cloud:
+    nacos:
+      config:
+        shared-configs:
+          - data-id: COMMON.YAML
+            group: BLOG
+        name: ${spring.application.name}
+        file-extension: YAML
+        group: BLOG
+

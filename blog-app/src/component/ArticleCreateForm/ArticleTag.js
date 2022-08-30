@@ -6,24 +6,20 @@ const ArticleTag = ({ value = [], onChange }) => {
   const [tags, setTags] = useState(value)
 
 
-  const add = () => {
+  const add = e => {
+    e.preventDefault()
     if (tags.indexOf(tag) === -1) {
-      setTags(tags => {
-        const newTags = [...tags, tag]
-        onChange(newTags)
-        return newTags
-      })
+      const newTags = [...tags, tag]
+      onChange(newTags)
+      setTags(newTags)
     }
     setTag('')
   }
 
   const remove = (tag) => {
-    setTags(tags => {
-      const a = tags.filter(t => t !== tag)
-      return a
-    })
-
-    
+    const newTags = tags.filter(t => t !== tag)
+    onChange(newTags)
+    setTags(newTags)
   }
 
 

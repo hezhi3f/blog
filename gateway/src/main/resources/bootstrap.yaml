@@ -1,0 +1,28 @@
+server:
+  port: 8080
+spring:
+  application:
+    name: BLOG-GATEWAY
+  cloud:
+    nacos:
+      config:
+        shared-configs:
+          - data-id: COMMON.YAML
+            group: BLOG
+        name: ${spring.application.name}
+        file-extension: YAML
+        group: BLOG
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+      routes:
+        - id: BLOG-USER-SERVICE
+          uri: lb://BLOG-USER-SERVICE
+          predicates:
+            - Path=/user/**
+        - id: BLOG-ARTICLE-SERVICE
+          uri: lb://BLOG-ARTICLE-SERVICE
+          predicates:
+            - Path=/article/**
+
