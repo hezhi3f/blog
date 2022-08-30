@@ -4,15 +4,17 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.hezhi3f.blog.common.entity.result.Result;
 import com.hezhi3f.blog.common.entity.user.*;
 
+import java.util.Optional;
+
 public interface UserService extends IService<UserPO> {
 
-    Result<String> login(UserLoginDTO userLoginDTO);
+    String login(UserLoginDTO userLoginDTO);
 
-    Result<String> signup(UserSignupDTO userSignupDTO);
+    String signup(UserSignupDTO userSignupDTO);
 
-    Result<String> update(UserUpdateDTO userUpdateDTO);
+    String update(UserUpdateDTO userUpdateDTO);
 
-    Result<UserInfoVO> getInfo(Long id);
+    UserInfoVO getInfo(Long id);
 
-    Result<UserPO> get(Long id);
+    Optional<UserPO> get(Long id);
 }

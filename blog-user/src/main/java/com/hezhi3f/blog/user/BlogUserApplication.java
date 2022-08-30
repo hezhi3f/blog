@@ -7,10 +7,8 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScans;
 
 @SpringBootApplication
-@ComponentScans({
-        @ComponentScan("com.hezhi3f.common")
-})
 @EnableDiscoveryClient
+@ComponentScans({@ComponentScan("com.hezhi3f.blog.common")})
 public class BlogUserApplication {
 
     public static void main(String[] args) {

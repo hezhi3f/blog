@@ -28,7 +28,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserPO> implements 
     }
 
     @Override
-    public Result<String> login(UserLoginDTO userLoginDTO) {
+    public String login(UserLoginDTO userLoginDTO) {
         String email = userLoginDTO.getEmail();
 
         UserPO userPO = this.getOne(Wrappers.<UserPO>query().eq("email", email));
@@ -50,11 +50,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserPO> implements 
 
         this.updateById(userPO);
         String token = TokenUtils.create(userPO);
-        return ResultUtils.success(token);
+        return token;
     }
 
     @Override
-    public Result<String> signup(UserSignupDTO userSignupDTO) {
+    public String signup(UserSignupDTO userSignupDTO) {
         String email = userSignupDTO.getEmail();
         UserPO userPO = this.getOne(Wrappers.<UserPO>query().eq("email", email));
         Assert.isNull(userPO, "邮箱已经被注册");
@@ -78,11 +78,11 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserPO> implements 
         Assert.isTrue(save, "注册失败");
 
         String token = TokenUtils.create(userPO);
-        return ResultUtils.success(token);
+        return token;
     }
 
     @Override
-    public Result<String> update(UserUpdateDTO userUpdateDTO) {
+    public String update(UserUpdateDTO userUpdateDTO) {
         Long id = userUpdateDTO.getId();
         UserPO userPO = this.getById(id);
 
@@ -123,14 +123,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserPO> implements 
         if (!list.isEmpty()) {
             userPO.setGmtModified(new Date());
             this.updateById(userPO);
-            return ResultUtils.success(String.join(",", list) + "更新成功");
+            return String.join(",", list) + "更新成功";
         }
 
-        return ResultUtils.success("未做任何改变");
+        return "未做任何改变";
     }
 
     @Override
-    public Result<UserInfoVO> getInfo(Long id) {
+    public UserInfoVO getInfo(Long id) {
         UserPO userPO = this.getById(id);
         UserInfoVO userInfoVO = new UserInfoVO();
 
@@ -140,13 +140,14 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserPO> implements 
         userInfoVO.setPassword("*".repeat(userPO.getPassword().length()));
         userInfoVO.setGmtCreated(userPO.getGmtCreated());
         userInfoVO.setGmtModified(userPO.getGmtModified());
-        return ResultUtils.success(userInfoVO);
+        return userInfoVO;
     }
 
     @Override
-    public Result<UserPO> get(Long id) {
+    public Optional<UserPO> get(Long id) {
         UserPO userPO = this.getById(id);
-        return ResultUtils.success(userPO);
+
+        return Optional.ofNullable(userPO);
     }
 
     @NotNull

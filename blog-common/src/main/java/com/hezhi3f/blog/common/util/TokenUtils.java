@@ -26,4 +26,8 @@ public class TokenUtils {
         JWT.require(Algorithm.HMAC256(secret)).build().verify(token);
         // if error throw
     }
+
+    public static Long getAsLong(String token, String claim) {
+        return JWT.decode(token).getClaim(claim).asLong();
+    }
 }

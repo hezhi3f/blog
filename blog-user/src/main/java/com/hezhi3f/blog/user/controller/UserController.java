@@ -2,6 +2,7 @@ package com.hezhi3f.blog.user.controller;
 
 
 import com.hezhi3f.blog.common.entity.user.*;
+import com.hezhi3f.blog.common.exception.BlogException;
 import com.hezhi3f.blog.user.service.UserService;
 
 import com.hezhi3f.blog.common.entity.result.Result;
@@ -10,6 +11,8 @@ import com.hezhi3f.blog.common.validate.annotation.Validated;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/user")
 public class UserController {
@@ -17,12 +20,14 @@ public class UserController {
 
     @PostMapping("/login")
     public Result<String> login(@Validated @RequestBody UserLoginDTO userLoginDTO) {
-        return userService.login(userLoginDTO);
+        String token = userService.login(userLoginDTO);
+        return ResultUtils.success(token);
     }
 
     @PostMapping("/signup")
     public Result<String> signup(@Validated @RequestBody UserSignupDTO userSignupDTO) {
-        return userService.signup(userSignupDTO);
+        String token = userService.signup(userSignupDTO);
+        return ResultUtils.success(token);
     }
 
     @PostMapping("/update")
@@ -30,23 +35,21 @@ public class UserController {
             @Validated @RequestBody UserUpdateDTO userUpdateDTO,
             @RequestAttribute("id") Long id) {
         userUpdateDTO.setId(id);
-        return userService.update(userUpdateDTO);
+        String updateInfo = userService.update(userUpdateDTO);
+        return ResultUtils.success(updateInfo);
     }
 
     @PostMapping("/info")
     public Result<UserInfoVO> info(@RequestAttribute("id") Long id) {
-        return userService.getInfo(id);
+        UserInfoVO vo = userService.getInfo(id);
+        return ResultUtils.success(vo);
     }
 
 
-    @RequestMapping(value = "/get",method = RequestMethod.GET)
+    @RequestMapping(value = "/get", method = RequestMethod.GET)
     public Result<UserPO> get(@RequestParam Long id) {
-        return userService.get(id);
-    }
-
-    @PostMapping("/test")
-    public Result<Void> test(@Validated @RequestBody UserLoginDTO userLoginDTO) {
-        return ResultUtils.success();
+        UserPO userPO = userService.get(id).orElseThrow(() -> new BlogException("用户不存在"));
+        return ResultUtils.success(userPO);
     }
 
     @Autowired
