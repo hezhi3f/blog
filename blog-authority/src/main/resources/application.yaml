@@ -1,4 +1,16 @@
 server:
-  port: 8080
+  port: 9002
+
+spring:
+  application:
+    name: BLOG-AUTHORITY-SERVICE
+  datasource:
+    username: root
+    password: root
+    url: jdbc:mysql://localhost:3306/blog?useUnicode=true&characterEncoding=utf-8&relaxAutoCommit=true&zeroDateTimeBehavior=convertToNull&allowMultiQueries=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
 
 

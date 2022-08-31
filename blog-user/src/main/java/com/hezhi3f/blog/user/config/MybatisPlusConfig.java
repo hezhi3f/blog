@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@MapperScan("com.hezhi3f.bloguser.dao")
 public class MybatisPlusConfig {
     @Bean
     public MybatisPlusInterceptor getMybatisPlusInterceptor() {

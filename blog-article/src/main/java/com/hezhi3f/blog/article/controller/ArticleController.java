@@ -16,7 +16,6 @@ public class ArticleController {
     @PostMapping("/create")
     public Result<Void> create(
             @Validated @RequestBody ArticleCreateDTO articleCreateDTO) {
-        articleCreateDTO.setUserId(1L);
         return articleService.create(articleCreateDTO);
     }
 

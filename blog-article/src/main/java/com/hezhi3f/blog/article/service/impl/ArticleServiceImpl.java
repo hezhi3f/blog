@@ -6,6 +6,7 @@ import com.hezhi3f.blog.article.service.ArticleBodyService;
 import com.hezhi3f.blog.article.service.ArticleKindService;
 import com.hezhi3f.blog.article.service.ArticleService;
 import com.hezhi3f.blog.article.service.ArticleTagService;
+import com.hezhi3f.blog.common.context.UserContext;
 import com.hezhi3f.blog.common.entity.article.*;
 import com.hezhi3f.blog.common.entity.result.Result;
 import com.hezhi3f.blog.common.util.Assert;
@@ -28,13 +29,16 @@ public class ArticleServiceImpl
     public Result<Void> create(ArticleCreateDTO dto) {
         ArticlePO po = new ArticlePO();
 
-        po.setUserId(dto.getUserId());
+        Long id = UserContext.get().getId();
+        po.setUserId(id);
         po.setTitle(dto.getTitle());
 
-        ArticleKindPO kind = kindService.create(dto.getKind());
+        // 根据kind获得id
+        ArticleKindPO kind = kindService.save(dto.getKind());
         po.setArticleKindId(kind.getId());
 
-        ArticleBodyPO body = bodyService.create(dto.getContent());
+        // 插入body并获得id
+        ArticleBodyPO body = bodyService.save(dto.getContent());
         po.setArticleBodyId(body.getId());
 
         po.setGmtCreated(new Date());
@@ -52,9 +56,8 @@ public class ArticleServiceImpl
         ArticleVO vo = new ArticleVO();
         ArticlePO po = this.getById(articleId);
         Assert.isNotNull(po, "文章不存在");
-        // todo 未被删除
-        Assert.isFalse(po.getDeleted(), "文章已被删除");
-        // todo feign get username
+
+
         vo.setNickName(po.getUserId().toString());
         vo.setTitle(po.getTitle());
 

@@ -4,6 +4,6 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.hezhi3f.blog.common.entity.article.ArticleBodyPO;
 
 public interface ArticleBodyService extends IService<ArticleBodyPO> {
-    ArticleBodyPO create(String content);
+    ArticleBodyPO save(String content);
 
 }

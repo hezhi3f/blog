@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class ControllerAspect {
 
-    @Pointcut("execution(* com.hezhi3f.bloguser.controller.*.*(..))")
+    @Pointcut("execution(* com.hezhi3f.blog.user.controller.*.*(..))")
     private void pointCut() {
     }
 

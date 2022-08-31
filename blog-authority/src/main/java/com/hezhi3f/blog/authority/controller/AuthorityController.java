@@ -1,9 +1,12 @@
 package com.hezhi3f.blog.authority.controller;
 
 import com.auth0.jwt.JWT;
-import com.hezhi3f.blog.authority.service.UserService;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.hezhi3f.blog.authority.service.AuthorityService;
+import com.hezhi3f.blog.common.entity.authority.AuthorityPO;
 import com.hezhi3f.blog.common.entity.result.Result;
 import com.hezhi3f.blog.common.entity.user.UserPO;
+import com.hezhi3f.blog.common.exception.BlogException;
 import com.hezhi3f.blog.common.util.Assert;
 import com.hezhi3f.blog.common.util.ResultUtils;
 import com.hezhi3f.blog.common.util.TokenUtils;
@@ -14,15 +17,17 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class AuthorityController {
     @Autowired
-    private UserService userService;
+    private AuthorityService authorityService;
 
-    @RequestMapping("/verify")
-    public Result<Boolean> verify(String token) {
-        Long id = TokenUtils.getAsLong(token, "id");
-        Result<UserPO> userPO = userService.get(id);
-        Boolean ok = userPO.getOk();
-
-        return ResultUtils.success(ok);
+    @RequestMapping("/authority/verify")
+    public Result<UserPO> verify(String token) {
+        UserPO po = authorityService.verify(token);
+        return ResultUtils.success(po);
     }
 
+    @RequestMapping("/authority/refresh")
+    public Result<String> refresh(UserPO userPO) {
+        String token = authorityService.refresh(userPO);
+        return ResultUtils.success(token);
+    }
 }

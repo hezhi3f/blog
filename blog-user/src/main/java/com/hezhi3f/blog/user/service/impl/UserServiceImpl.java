@@ -2,16 +2,14 @@ package com.hezhi3f.blog.user.service.impl;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hezhi3f.blog.common.entity.result.Result;
 import com.hezhi3f.blog.common.entity.user.*;
+import com.hezhi3f.blog.common.exception.BlogException;
+import com.hezhi3f.blog.common.util.Assert;
+import com.hezhi3f.blog.user.api.AuthorityService;
 import com.hezhi3f.blog.user.dao.UserMapper;
 import com.hezhi3f.blog.user.service.RedisService;
 import com.hezhi3f.blog.user.service.UserService;
-import com.hezhi3f.blog.common.entity.result.Result;
-import com.hezhi3f.blog.common.exception.BlogException;
-import com.hezhi3f.blog.common.util.Assert;
-import com.hezhi3f.blog.common.util.CodeUtils;
-import com.hezhi3f.blog.common.util.ResultUtils;
-import com.hezhi3f.blog.common.util.TokenUtils;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,13 +20,16 @@ import java.util.*;
 public class UserServiceImpl extends ServiceImpl<UserMapper, UserPO> implements UserService {
     private final RedisService redisService;
 
+    private final AuthorityService authorityService;
+
     @Autowired
-    public UserServiceImpl(RedisService redisService) {
+    public UserServiceImpl(RedisService redisService, AuthorityService authorityService) {
         this.redisService = redisService;
+        this.authorityService = authorityService;
     }
 
     @Override
-    public String login(UserLoginDTO userLoginDTO) {
+    public UserPO login(UserLoginDTO userLoginDTO) {
         String email = userLoginDTO.getEmail();
 
         UserPO userPO = this.getOne(Wrappers.<UserPO>query().eq("email", email));
@@ -44,17 +45,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserPO> implements 
             // 前端传递的非法参数
             throw new BlogException("参数错误");
         }
-
         userPO.setGmtModified(new Date());
-        userPO.setSecret(CodeUtils.uuid());
 
         this.updateById(userPO);
-        String token = TokenUtils.create(userPO);
-        return token;
+
+        return userPO;
     }
 
     @Override
-    public String signup(UserSignupDTO userSignupDTO) {
+    public UserPO signup(UserSignupDTO userSignupDTO) {
         String email = userSignupDTO.getEmail();
         UserPO userPO = this.getOne(Wrappers.<UserPO>query().eq("email", email));
         Assert.isNull(userPO, "邮箱已经被注册");
@@ -72,13 +71,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserPO> implements 
 
         userPO.setNickname(getNickname(email));
         userPO.setGmtCreated(new Date());
-        userPO.setSecret(CodeUtils.uuid());
 
         boolean save = this.save(userPO);
         Assert.isTrue(save, "注册失败");
-
-        String token = TokenUtils.create(userPO);
-        return token;
+        return userPO;
     }
 
     @Override

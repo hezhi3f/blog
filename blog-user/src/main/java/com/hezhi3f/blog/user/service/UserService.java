@@ -8,9 +8,9 @@ import java.util.Optional;
 
 public interface UserService extends IService<UserPO> {
 
-    String login(UserLoginDTO userLoginDTO);
+    UserPO login(UserLoginDTO userLoginDTO);
 
-    String signup(UserSignupDTO userSignupDTO);
+    UserPO signup(UserSignupDTO userSignupDTO);
 
     String update(UserUpdateDTO userUpdateDTO);
 

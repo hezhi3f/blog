@@ -19,14 +19,6 @@ public class ArticleTagServiceImpl
         this.saveBatch(boxedTag(id, tags));
     }
 
-    @Override
-    public List<String> getTags(Long articleId) {
-        return this.list(Wrappers.<ArticleTagPO>query().eq("article_id", articleId))
-                .stream()
-                .map(ArticleTagPO::getTag)
-                .collect(Collectors.toList());
-    }
-
     @NotNull
     private List<ArticleTagPO> boxedTag(Long id, List<String> tags) {
         return tags.stream().map(tag -> createTagPO(id, tag)).collect(Collectors.toList());
@@ -38,6 +30,14 @@ public class ArticleTagServiceImpl
         po.setArticleId(id);
         po.setTag(tag);
         return po;
+    }
+
+    @Override
+    public List<String> getTags(Long articleId) {
+        return this.list(Wrappers.<ArticleTagPO>query().eq("article_id", articleId))
+                .stream()
+                .map(ArticleTagPO::getTag)
+                .collect(Collectors.toList());
     }
 
 }

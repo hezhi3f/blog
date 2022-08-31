@@ -1,5 +1,5 @@
 server:
-  port: 0
+  port: 9001
 spring:
   application:
     name: BLOG-USER-SERVICE
@@ -12,9 +12,3 @@ spring:
         name: ${spring.application.name}
         file-extension: YAML
         group: BLOG
-mybatis:
-
-
-  mapper-locations: classpath*:/mapper/**/*.xml
-mybatis-plus:
-  mapper-locations:
