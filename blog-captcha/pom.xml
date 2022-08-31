@@ -8,7 +8,6 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
     <artifactId>blog-captcha</artifactId>
-    <name>blog-captcha</name>
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
