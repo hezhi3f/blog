@@ -14,7 +14,9 @@ public interface UserService extends IService<UserPO> {
 
     String update(UserUpdateDTO userUpdateDTO);
 
-    UserInfoVO getInfo(Long id);
+    UserInfoVO getInfo();
 
     Optional<UserPO> get(Long id);
+
+    String getNicknameById(Long id);
 }

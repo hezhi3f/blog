@@ -2,7 +2,6 @@ package com.hezhi3f.blog.user.api;
 
 import com.hezhi3f.blog.common.entity.result.Result;
 import com.hezhi3f.blog.common.entity.user.UserPO;
-import org.springframework.boot.ApplicationRunner;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,8 +12,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient("BLOG-AUTHORITY-SERVICE")
 public interface AuthorityService {
     @RequestMapping("/authority/verify")
-    Result<Void> verify( String token);
+    Result<UserPO> verify(@RequestBody String token);
 
     @RequestMapping("/authority/refresh")
-    Result<String> create( Long userId);
+    Result<String> refresh(@RequestBody UserPO userPO);
 }

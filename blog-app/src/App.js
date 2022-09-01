@@ -8,7 +8,6 @@ const App = () => {
   const location = useLocation()
 
   useEffect(() => {
-    return
     // 过滤掉登录和注册
     if (['/login', '/signup'].indexOf(location.pathname) !== -1) {
       return

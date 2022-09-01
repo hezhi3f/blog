@@ -36,9 +36,9 @@ public class AuthorityServiceImpl
     @Override
     public String refresh(UserPO userPO) {
         userPO.setSecret(CodeUtils.uuid());
+        this.updateById(userPO);
 
         return TokenUtils.create(userPO);
-
     }
 
 }

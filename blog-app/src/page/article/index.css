@@ -1,7 +1,6 @@
 .article {
   width: 61.8vw;
   margin: auto;
-  padding: 35px 50px 10px;
   box-shadow: 0 0 20px rgba(0,0,0,0.1);
   background-color: white;
 }

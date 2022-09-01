@@ -1,6 +1,7 @@
 package com.hezhi3f.blog.user.controller;
 
 
+import com.hezhi3f.blog.common.context.UserContext;
 import com.hezhi3f.blog.common.entity.result.Result;
 import com.hezhi3f.blog.common.entity.user.*;
 import com.hezhi3f.blog.common.exception.BlogException;
@@ -20,27 +21,25 @@ public class UserController {
     @PostMapping("/login")
     public Result<String> login(@Validated @RequestBody UserLoginDTO userLoginDTO) {
         UserPO userPO = userService.login(userLoginDTO);
-        return authorityService.create(userPO.getId());
+        return authorityService.refresh(userPO);
     }
 
     @PostMapping("/signup")
     public Result<String> signup(@Validated @RequestBody UserSignupDTO userSignupDTO) {
         UserPO userPO = userService.signup(userSignupDTO);
-        return authorityService.create(userPO.getId());
+        return authorityService.refresh(userPO);
     }
 
     @PostMapping("/update")
     public Result<String> update(
-            @Validated @RequestBody UserUpdateDTO userUpdateDTO,
-            @RequestAttribute("id") Long id) {
-        userUpdateDTO.setId(id);
+            @Validated @RequestBody UserUpdateDTO userUpdateDTO) {
         String updateInfo = userService.update(userUpdateDTO);
         return ResultUtils.success(updateInfo);
     }
 
     @PostMapping("/info")
-    public Result<UserInfoVO> info(@RequestParam Long id) {
-        UserInfoVO vo = userService.getInfo(id);
+    public Result<UserInfoVO> info() {
+        UserInfoVO vo = userService.getInfo();
         return ResultUtils.success(vo);
     }
 
@@ -49,6 +48,12 @@ public class UserController {
     public Result<UserPO> get(@RequestParam Long id) {
         UserPO userPO = userService.get(id).orElseThrow(() -> new BlogException("用户不存在"));
         return ResultUtils.success(userPO);
+    }
+
+    @RequestMapping("/nickname")
+    public Result<String> getNickname(@RequestParam Long id) {
+        String nickname = userService.getNicknameById(id);
+        return ResultUtils.success(nickname);
     }
 
     @Autowired

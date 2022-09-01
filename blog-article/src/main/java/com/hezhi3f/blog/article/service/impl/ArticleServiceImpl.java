@@ -1,6 +1,8 @@
 package com.hezhi3f.blog.article.service.impl;
 
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hezhi3f.blog.article.api.UserService;
 import com.hezhi3f.blog.article.dao.ArticleMapper;
 import com.hezhi3f.blog.article.service.ArticleBodyService;
 import com.hezhi3f.blog.article.service.ArticleKindService;
@@ -17,10 +19,12 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ArticleServiceImpl
         extends ServiceImpl<ArticleMapper, ArticlePO> implements ArticleService {
+    private final UserService userService;
     private final ArticleBodyService bodyService;
     private final ArticleKindService kindService;
     private final ArticleTagService tagService;
@@ -51,15 +55,19 @@ public class ArticleServiceImpl
 
     @Override
     @Transactional
-    public Result<ArticleVO> getArticleVOByArticleId(Long articleId) {
+    public ArticleVO getArticleVOByArticleId(Long articleId) {
         Assert.isNotNull(articleId, "articleId不能为空");
         ArticleVO vo = new ArticleVO();
         ArticlePO po = this.getById(articleId);
         Assert.isNotNull(po, "文章不存在");
 
+        Long userId = po.getUserId();
+        Result<String> userPO = userService.getNickname(userId);
 
-        vo.setNickName(po.getUserId().toString());
+        vo.setNickName(userPO.getData());
         vo.setTitle(po.getTitle());
+        vo.setGmtCreated(po.getGmtCreated());
+        vo.setGmtModified(po.getGmtModified());
 
         ArticleKindPO kind = kindService.getById(po.getArticleKindId());
         vo.setKind(kind.getKind());
@@ -70,15 +78,24 @@ public class ArticleServiceImpl
         List<String> tags = tagService.getTags(articleId);
         vo.setTags(tags);
 
-        vo.setGmtCreated(po.getGmtCreated());
-        vo.setGmtModified(po.getGmtModified());
-        return ResultUtils.success(vo);
+        return vo;
+    }
+
+    @Override
+    public List<ArticleVO> listByUserId(Long userId) {
+        List<ArticlePO> pos = this.list(Wrappers.<ArticlePO>query().eq("user_id", userId));
+        return pos.stream()
+                .map(ArticlePO::getId)
+                .map(this::getArticleVOByArticleId)
+                .collect(Collectors.toList());
     }
 
     @Autowired
-    public ArticleServiceImpl(ArticleBodyService bodyService,
+    public ArticleServiceImpl(UserService userService,
+                              ArticleBodyService bodyService,
                               ArticleKindService kindService,
                               ArticleTagService tagService) {
+        this.userService = userService;
         this.bodyService = bodyService;
         this.kindService = kindService;
         this.tagService = tagService;

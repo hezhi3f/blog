@@ -1,6 +1,6 @@
 spring:
   application:
-    name: BLOG-GATEWAY
+    name: BLOG-AUTHORITY-SERVICE
   cloud:
     nacos:
       config:

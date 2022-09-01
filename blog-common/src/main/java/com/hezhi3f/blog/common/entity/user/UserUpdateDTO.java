@@ -7,7 +7,6 @@ import lombok.Data;
 
 @Data
 public class UserUpdateDTO {
-    private Long id;
     private String gender;
     private String oldPassword;
     @Length(min = 6, max = 36, msg = "请输入长度为6到36位的密码")

@@ -1,0 +1,57 @@
+.card {
+  background-color: white;
+  margin: 5px;
+  width: 61.8vw;
+  padding: 12px 24px 16px 24px !important;
+}
+
+.head {
+  margin-bottom: 10px;
+}
+
+.head-title {
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.head-title:hover {
+  cursor: pointer;
+  color: rgb(23, 81, 153)
+}
+
+.article-author {
+  margin: 5px 0;
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.content-common {
+  margin-bottom: 10px;
+}
+
+.content-close {
+  color: black;
+  cursor: pointer;
+  transition: all .3s;
+}
+
+.content-close:hover {
+  color: gray;
+  cursor: pointer;
+  transition: all .3s;
+}
+
+.content-time {
+  color: rgb(133, 144, 166);
+  margin-bottom: 5px;
+}
+
+.content-switch {
+  color: #1890ff;
+  transition: all .3s;
+}
+
+.content-switch:hover {
+  color: #40a9ff;
+  transition: all .3s;
+}

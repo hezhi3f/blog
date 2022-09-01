@@ -11,7 +11,9 @@ import com.hezhi3f.blog.common.util.Assert;
 import com.hezhi3f.blog.common.util.ResultUtils;
 import com.hezhi3f.blog.common.util.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -20,13 +22,13 @@ public class AuthorityController {
     private AuthorityService authorityService;
 
     @RequestMapping("/authority/verify")
-    public Result<UserPO> verify(String token) {
+    public Result<UserPO> verify(@RequestBody String token) {
         UserPO po = authorityService.verify(token);
         return ResultUtils.success(po);
     }
 
     @RequestMapping("/authority/refresh")
-    public Result<String> refresh(UserPO userPO) {
+    public Result<String> refresh(@RequestBody UserPO userPO) {
         String token = authorityService.refresh(userPO);
         return ResultUtils.success(token);
     }

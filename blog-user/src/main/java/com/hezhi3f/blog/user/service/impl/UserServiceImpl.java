@@ -1,7 +1,9 @@
 package com.hezhi3f.blog.user.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hezhi3f.blog.common.context.UserContext;
 import com.hezhi3f.blog.common.entity.result.Result;
 import com.hezhi3f.blog.common.entity.user.*;
 import com.hezhi3f.blog.common.exception.BlogException;
@@ -79,10 +81,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserPO> implements 
 
     @Override
     public String update(UserUpdateDTO userUpdateDTO) {
-        Long id = userUpdateDTO.getId();
-        UserPO userPO = this.getById(id);
-
-        Assert.isNotNull(userPO, "更新的用户id不存在");
+        UserPO userPO = UserContext.get();
 
         String oldPassword = userUpdateDTO.getOldPassword();
         String newPassword = userUpdateDTO.getNewPassword();
@@ -126,8 +125,8 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserPO> implements 
     }
 
     @Override
-    public UserInfoVO getInfo(Long id) {
-        UserPO userPO = this.getById(id);
+    public UserInfoVO getInfo() {
+        UserPO userPO = UserContext.get();
         UserInfoVO userInfoVO = new UserInfoVO();
 
         userInfoVO.setEmail(userPO.getEmail());
@@ -144,6 +143,12 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserPO> implements 
         UserPO userPO = this.getById(id);
 
         return Optional.ofNullable(userPO);
+    }
+
+    @Override
+    public String getNicknameById(Long id) {
+        UserPO userPO = this.getOne(Wrappers.<UserPO>query().select("nickname").eq("id", id));
+        return userPO.getNickname();
     }
 
     @NotNull

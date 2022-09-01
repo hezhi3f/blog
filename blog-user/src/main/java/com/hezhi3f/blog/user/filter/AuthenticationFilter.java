@@ -1,7 +1,10 @@
 package com.hezhi3f.blog.user.filter;
 
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.hezhi3f.blog.common.context.UserContext;
 import com.hezhi3f.blog.common.entity.result.Result;
+import com.hezhi3f.blog.common.entity.user.UserPO;
 import com.hezhi3f.blog.user.api.AuthorityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
@@ -18,7 +21,7 @@ import java.util.Set;
 @Component
 @Order
 public class AuthenticationFilter extends OncePerRequestFilter {
-    private static final Set<String> ALLOW_PATH = Set.of("/user/login", "/user/signup");
+    private static final Set<String> ALLOW_PATH = Set.of("/user/login", "/user/signup", "/user/nickname");
     private final AuthorityService authorityService;
 
     @Autowired
@@ -36,14 +39,17 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         }
 
         String token = request.getHeader("token");
-        Result<Void> result = authorityService.verify(token);
+        Result<UserPO> result = authorityService.verify(token);
         // 成功放行，失败返回错误信息
         if (result.getOk()) {
+            UserContext.set(result.getData());
             filterChain.doFilter(request, response);
         } else {
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application/json");
-            response.getWriter().write(result.toString());
+            ObjectMapper mapper = new ObjectMapper();
+            String string = mapper.writeValueAsString(result);
+            response.getWriter().write(string);
         }
     }
 }
