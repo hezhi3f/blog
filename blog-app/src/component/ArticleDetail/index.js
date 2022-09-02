@@ -1,4 +1,4 @@
-import { PageHeader, Tag, Row, Col, Space, Button } from 'antd'
+import { PageHeader, Tag, Row, Col, Space, Button, Input } from 'antd'
 import React from 'react'
 import {
   CommentOutlined,
@@ -9,25 +9,21 @@ import {
   LikeOutlined,
   StarOutlined,
   HeartOutlined,
-  EllipsisOutlined
+  EllipsisOutlined,
+  EditOutlined
 } from '@ant-design/icons'
 import './index.css'
 import { useLocation, useNavigate } from 'react-router-dom'
 
-
-const data = {
-  nickName: '我叫迢大傻',
-  title: '文章标题1',
-  kind: '自创',
-  content: "文章内容".repeat(500) + 'end',
-  tags: ['springboot', 'springcloud', 'nacos'],
-  gmtCreated: '2022-03-13 19:32:44',
-  gmtModified: '2022-05-23 23:32:42'
-}
 const ArticleDetail = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const article = location.state
+
+  const handleUpdate = () => {
+    navigate('/article/update', { state: article.articleId })
+  }
+
   return (
     <PageHeader
       onBack={() => { navigate(-1) }}
@@ -37,14 +33,19 @@ const ArticleDetail = () => {
         分类：<Tag>  {article.kind}</Tag>
         标签：{article.tags.map(tag => <Tag>#{tag}</Tag>)}
       </>}
-      extra={<Button>修改</Button>}
     >
-      {article.content}
+      <Input.TextArea
+        bordered={false}
+        autoSize
+        readOnly
+        value={article.content}
+      />
+
       <div className='aritcle-time'>
         {
-        article.gmtModified === null 
-        ? `发布于 ${article.gmtCreated}`
-        :`修改于 ${article.gmtModified}`}
+          article.gmtModified === null
+            ? `发布于 ${article.gmtCreated}`
+            : `修改于 ${article.gmtModified}`}
       </div>
       <Row>
         <Col flex={6}>

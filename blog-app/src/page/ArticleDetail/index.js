@@ -6,9 +6,7 @@ import './index.css'
 const ArticleDetailPage = () => {
   return (
     <Common>
-      <div className='detail'>
-        <ArticleDetail />
-      </div>
+      <ArticleDetail />
     </Common>
   )
 }

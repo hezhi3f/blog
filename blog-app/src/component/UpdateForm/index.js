@@ -10,7 +10,7 @@ const UpdateForm = (props) => {
   const [form] = Form.useForm()
   const { type } = props
   const onFinish = (values) => {
-    api('user/update', values, data => {
+    api('/user/update', values, data => {
       message.success(data)
       navigate(-1)
     })

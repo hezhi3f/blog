@@ -4,6 +4,7 @@ import com.hezhi3f.blog.article.service.ArticleService;
 import com.hezhi3f.blog.common.context.UserContext;
 import com.hezhi3f.blog.common.entity.article.ArticleCreateDTO;
 import com.hezhi3f.blog.common.entity.article.ArticlePO;
+import com.hezhi3f.blog.common.entity.article.ArticleUpdateDTO;
 import com.hezhi3f.blog.common.entity.article.ArticleVO;
 import com.hezhi3f.blog.common.entity.result.Result;
 import com.hezhi3f.blog.common.util.ResultUtils;
@@ -24,7 +25,13 @@ public class ArticleController {
         return articleService.create(articleCreateDTO);
     }
 
-    @GetMapping("/get")
+    @PostMapping("/update")
+    public Result<String> update(@RequestBody ArticleUpdateDTO articleUpdateDTO) {
+        String msg = articleService.update(articleUpdateDTO);
+        return ResultUtils.success(msg);
+    }
+
+    @RequestMapping("/get")
     public Result<ArticleVO> getArticleVOByArticleId(@RequestParam("articleId") Long articleId) {
         ArticleVO vo = articleService.getArticleVOByArticleId(articleId);
         return ResultUtils.success(vo);

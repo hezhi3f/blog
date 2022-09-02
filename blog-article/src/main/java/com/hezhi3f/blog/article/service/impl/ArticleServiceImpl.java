@@ -17,8 +17,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -48,7 +50,7 @@ public class ArticleServiceImpl
         po.setGmtCreated(new Date());
         this.save(po);
 
-        tagService.save(po.getId(), dto.getTags());
+        tagService.saveBatch(po.getId(), dto.getTags());
 
         return ResultUtils.success();
     }
@@ -64,6 +66,7 @@ public class ArticleServiceImpl
         Long userId = po.getUserId();
         Result<String> userPO = userService.getNickname(userId);
 
+        vo.setArticleId(articleId);
         vo.setNickName(userPO.getData());
         vo.setTitle(po.getTitle());
         vo.setGmtCreated(po.getGmtCreated());
@@ -75,7 +78,9 @@ public class ArticleServiceImpl
         ArticleBodyPO body = bodyService.getById(po.getArticleBodyId());
         vo.setContent(body.getContent());
 
-        List<String> tags = tagService.getTags(articleId);
+        List<String> tags = tagService.getTags(articleId).stream()
+                .map(ArticleTagPO::getTag)
+                .collect(Collectors.toList());
         vo.setTags(tags);
 
         return vo;
@@ -88,6 +93,98 @@ public class ArticleServiceImpl
                 .map(ArticlePO::getId)
                 .map(this::getArticleVOByArticleId)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public String update(ArticleUpdateDTO dto) {
+        Long articleId = dto.getArticleId();
+        ArticlePO po = this.getById(articleId);
+        List<String> poChange = new ArrayList<>();
+        List<String> otherChange = new ArrayList<>();
+
+        updateTitle(dto, po, poChange);
+        updateBody(dto, po, otherChange);
+        updateKind(dto, po, poChange);
+        updateTags(dto, articleId, otherChange);
+
+        if (poChange.isEmpty() && otherChange.isEmpty()) {
+            return "未作任何改变";
+        }
+
+        StringBuilder sb = new StringBuilder();
+        if (!poChange.isEmpty()) {
+            this.updateById(po);
+            sb.append(String.join("、", poChange)).append("修改成功");
+        }
+
+        if (!otherChange.isEmpty()) {
+            sb.append(String.join("、", otherChange)).append("修改成功");
+        }
+
+        return sb.toString();
+    }
+
+    private void updateTitle(ArticleUpdateDTO dto, ArticlePO po, List<String> msg) {
+        String oldTitle = po.getTitle();
+        String newTitle = dto.getTitle();
+
+        if (!Objects.equals(oldTitle, newTitle)) {
+            po.setTitle(newTitle);
+            msg.add("标题");
+        } else {
+            po.setTitle(null);
+        }
+    }
+
+    private void updateBody(ArticleUpdateDTO dto, ArticlePO po, List<String> msg) {
+        ArticleBodyPO body = bodyService.getById(po.getArticleBodyId());
+        String oldContent = body.getContent();
+        String newContent = dto.getContent();
+
+        if (!Objects.equals(oldContent, newContent)) {
+            body.setContent(newContent);
+            bodyService.updateById(body);
+            msg.add("正文");
+        } else {
+            po.setArticleBodyId(null);
+        }
+    }
+
+    private void updateKind(ArticleUpdateDTO dto, ArticlePO po, List<String> msg) {
+        ArticleKindPO kind = kindService.getById(po.getArticleKindId());
+        String oldKind = kind.getKind();
+        String newKind = dto.getKind();
+        if (!Objects.equals(oldKind, newKind)) {
+            po.setArticleKindId(kindService.save(newKind).getId());
+            msg.add("类型");
+        } else {
+            po.setArticleKindId(null);
+        }
+    }
+
+    private void updateTags(ArticleUpdateDTO dto, Long articleId, List<String> msg) {
+        List<ArticleTagPO> oldTagPOS = tagService.getTags(articleId);
+        List<String> newTags = dto.getTags();
+
+        List<String> same = newTags.stream()
+                .filter(tag -> oldTagPOS.stream()
+                        .anyMatch(tagPO -> tagPO.getTag().equals(tag)))
+                .collect(Collectors.toList());
+        if (same.size() == oldTagPOS.size() && same.size() == newTags.size()) {
+
+            return;
+        }
+
+        List<ArticleTagPO> remove = oldTagPOS.stream()
+                .filter(tagPO -> !same.contains(tagPO.getTag()))
+                .collect(Collectors.toList());
+        List<String> save = newTags.stream()
+                .filter(tag -> !same.contains(tag))
+                .collect(Collectors.toList());
+
+        tagService.removeBatchByIds(remove);
+        tagService.saveBatch(articleId, save);
+        msg.add("标签");
     }
 
     @Autowired

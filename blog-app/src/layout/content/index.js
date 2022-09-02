@@ -7,7 +7,9 @@ const ContentLayout = (props) => {
   const { children } = props
   return (
     <Content className='content'>
-      {children}
+      <div className='box'>
+        {children}
+      </div>
     </Content>
   )
 }

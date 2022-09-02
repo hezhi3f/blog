@@ -3,6 +3,7 @@ spring:
     name: BLOG-GATEWAY
   cloud:
     nacos:
+      server-addr: 43.143.70.32:8848
       config:
         shared-configs:
           - data-id: COMMON.YAML
@@ -10,3 +11,19 @@ spring:
         name: ${spring.application.name}
         file-extension: YAML
         group: BLOG
+    gateway:
+      globalcors:
+        add-to-simple-url-handler-mapping: true
+        cors-configurations:
+          '[/**]':
+            allowedOrigins:
+              - http://localhost:3000
+            allowed-methods:
+              - "GET"
+              - "POST"
+              - "DELETE"
+              - "PUT"
+              - "OPTIONS"
+            allowed-headers: "*"
+            allow-credentials: true
+            max-age: 360000

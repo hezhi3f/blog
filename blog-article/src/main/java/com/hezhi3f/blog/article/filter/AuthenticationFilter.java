@@ -38,7 +38,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         }
 
         String token = request.getHeader("token");
-        Result<UserPO> result = authorityService.verify(token);
+            Result<UserPO> result = authorityService.verify(token);
         // 成功放行，失败返回错误信息
         if (result.getOk()) {
             UserContext.set(result.getData());

@@ -1,5 +1,6 @@
 package com.hezhi3f.blog.article.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hezhi3f.blog.article.dao.ArticleTagMapper;
@@ -15,7 +16,7 @@ import java.util.stream.Collectors;
 public class ArticleTagServiceImpl
         extends ServiceImpl<ArticleTagMapper, ArticleTagPO> implements ArticleTagService {
     @Override
-    public void save(Long id, List<String> tags) {
+    public void saveBatch(Long id, List<String> tags) {
         this.saveBatch(boxedTag(id, tags));
     }
 
@@ -33,11 +34,8 @@ public class ArticleTagServiceImpl
     }
 
     @Override
-    public List<String> getTags(Long articleId) {
-        return this.list(Wrappers.<ArticleTagPO>query().eq("article_id", articleId))
-                .stream()
-                .map(ArticleTagPO::getTag)
-                .collect(Collectors.toList());
+    public List<ArticleTagPO> getTags(Long articleId) {
+        return this.list(Wrappers.<ArticleTagPO>query().eq("article_id", articleId));
     }
 
 }

@@ -83,20 +83,30 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserPO> implements 
     public String update(UserUpdateDTO userUpdateDTO) {
         UserPO userPO = UserContext.get();
 
-        String oldPassword = userUpdateDTO.getOldPassword();
-        String newPassword = userUpdateDTO.getNewPassword();
-
         List<String> list = new ArrayList<>(3);
-        if (!Objects.isNull(oldPassword) || !Objects.isNull(newPassword)) {
-            Assert.isNotNull(oldPassword, "旧密码不能为空");
-            Assert.isNotNull(newPassword, "新密码不能为空");
-            Assert.isEquals(oldPassword, userPO.getPassword(), "旧密码错误");
-            if (!Objects.equals(oldPassword, newPassword)) {
-                userPO.setPassword(newPassword);
-                list.add("密码");
-            }
+        updatePassword(userUpdateDTO, userPO, list);
+        updateGender(userUpdateDTO, userPO, list);
+        updateNickname(userUpdateDTO, userPO, list);
+        if (!list.isEmpty()) {
+            userPO.setGmtModified(new Date());
+            this.updateById(userPO);
+            return String.join(",", list) + "更新成功";
         }
 
+        return "未做任何改变";
+    }
+
+    private void updateNickname(UserUpdateDTO userUpdateDTO, UserPO userPO, List<String> list) {
+        String nickname = userUpdateDTO.getNickname();
+        if (nickname != null) {
+            if (!Objects.equals(nickname, userPO.getNickname())) {
+                userPO.setNickname(nickname);
+                list.add("昵称");
+            }
+        }
+    }
+
+    private void updateGender(UserUpdateDTO userUpdateDTO, UserPO userPO, List<String> list) {
         String gender = userUpdateDTO.getGender();
         if (gender != null) {
             Assert.isTrue(Gender.isLegal(gender), "不合法的性别参数");
@@ -106,22 +116,21 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserPO> implements 
                 list.add("性别");
             }
         }
+    }
 
-        String nickname = userUpdateDTO.getNickname();
-        if (nickname != null) {
-            if (!Objects.equals(nickname, userPO.getNickname())) {
-                userPO.setNickname(nickname);
-                list.add("昵称");
+    private void updatePassword(UserUpdateDTO userUpdateDTO, UserPO userPO, List<String> list) {
+        String oldPassword = userUpdateDTO.getOldPassword();
+        String newPassword = userUpdateDTO.getNewPassword();
+
+        if (!Objects.isNull(oldPassword) || !Objects.isNull(newPassword)) {
+            Assert.isNotNull(oldPassword, "旧密码不能为空");
+            Assert.isNotNull(newPassword, "新密码不能为空");
+            Assert.isEquals(oldPassword, userPO.getPassword(), "旧密码错误");
+            if (!Objects.equals(oldPassword, newPassword)) {
+                userPO.setPassword(newPassword);
+                list.add("密码");
             }
         }
-
-        if (!list.isEmpty()) {
-            userPO.setGmtModified(new Date());
-            this.updateById(userPO);
-            return String.join(",", list) + "更新成功";
-        }
-
-        return "未做任何改变";
     }
 
     @Override

@@ -3,15 +3,12 @@ import axios from 'axios'
 
 
 const api = (url, data = {}, func = () => { }) => {
-  console.log('url', url)
   const token = window.sessionStorage.getItem('token')
-  console.log('token', token);
-  axios({ method: 'post', url, data, headers: { token } })
+  axios({ method: 'post', url: 'http://localhost:8080' + url, data, headers: { token } })
     .then(res => {
       const { code, ok, msg, data } = res.data
-      console.log(res);
       if (ok) {
-        func(data)
+        return func(data)
       } else {
         message.error(`${msg}[${code}]`)
         if (code === 500) {
