@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import BasicItem from './BasicItem'
 import PasswordItem from './PasswordItem'
 import { Form, Button, message } from 'antd'
@@ -18,7 +18,7 @@ const UpdateForm = (props) => {
 
   useEffect(() => {
     api('/user/info', {}, form.setFieldsValue)
-  }, [])
+  }, [form.setFieldsValue])
 
   return (
     <Form

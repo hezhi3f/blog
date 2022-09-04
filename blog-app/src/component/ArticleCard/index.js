@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
-import { Button, Card, Tag, Col, Row, Space, PageHeader } from 'antd'
+import { Button, Tag, Col, Row, PageHeader } from 'antd'
 import {
   CommentOutlined,
-  DislikeOutlined,
   ShareAltOutlined,
   DownOutlined,
   UpOutlined,

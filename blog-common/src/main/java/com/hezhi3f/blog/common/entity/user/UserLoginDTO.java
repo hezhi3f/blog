@@ -20,5 +20,5 @@ public class UserLoginDTO {
 
     @Length(min = 6, max = 6, msg = "验证码长度只能为6位")
     @Type(regex = RegexEnum.NUMBER, msg = "验证码为纯数字")
-    private String checkCode;
+    private String captcha;
 }

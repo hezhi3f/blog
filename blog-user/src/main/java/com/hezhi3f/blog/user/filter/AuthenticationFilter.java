@@ -1,10 +1,12 @@
 package com.hezhi3f.blog.user.filter;
 
 
+import com.alibaba.fastjson.JSON;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hezhi3f.blog.common.context.UserContext;
 import com.hezhi3f.blog.common.entity.result.Result;
 import com.hezhi3f.blog.common.entity.user.UserPO;
+import com.hezhi3f.blog.common.service.RedisService;
 import com.hezhi3f.blog.user.api.AuthorityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.annotation.Order;
@@ -27,6 +29,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     public AuthenticationFilter(AuthorityService authorityService) {
         this.authorityService = authorityService;
+
     }
 
     @Override
@@ -47,9 +50,7 @@ public class AuthenticationFilter extends OncePerRequestFilter {
         } else {
             response.setCharacterEncoding("UTF-8");
             response.setContentType("application/json");
-            ObjectMapper mapper = new ObjectMapper();
-            String string = mapper.writeValueAsString(result);
-            response.getWriter().write(string);
+            response.getWriter().write(JSON.toJSONString(result));
         }
     }
 }

@@ -1,16 +1,14 @@
 package com.hezhi3f.blog.user.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hezhi3f.blog.common.context.UserContext;
-import com.hezhi3f.blog.common.entity.result.Result;
 import com.hezhi3f.blog.common.entity.user.*;
 import com.hezhi3f.blog.common.exception.BlogException;
+import com.hezhi3f.blog.common.service.RedisPrefix;
+import com.hezhi3f.blog.common.service.RedisService;
 import com.hezhi3f.blog.common.util.Assert;
-import com.hezhi3f.blog.user.api.AuthorityService;
 import com.hezhi3f.blog.user.dao.UserMapper;
-import com.hezhi3f.blog.user.service.RedisService;
 import com.hezhi3f.blog.user.service.UserService;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,12 +20,10 @@ import java.util.*;
 public class UserServiceImpl extends ServiceImpl<UserMapper, UserPO> implements UserService {
     private final RedisService redisService;
 
-    private final AuthorityService authorityService;
 
     @Autowired
-    public UserServiceImpl(RedisService redisService, AuthorityService authorityService) {
+    public UserServiceImpl(RedisService redisService) {
         this.redisService = redisService;
-        this.authorityService = authorityService;
     }
 
     @Override
@@ -37,9 +33,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserPO> implements 
         UserPO userPO = this.getOne(Wrappers.<UserPO>query().eq("email", email));
         Assert.isNotNull(userPO, "该邮箱还未注册");
 
-        if (userLoginDTO.getCheckCode() != null) {
-            String checkCode = redisService.getCheckCode(email);
-            Assert.isEquals(checkCode, userLoginDTO.getCheckCode(), "验证码错误");
+        if (userLoginDTO.getCaptcha() != null) {
+            String captcha = redisService.get(RedisPrefix.EMAIL + email);
+            Assert.isEquals(captcha, userLoginDTO.getCaptcha(), "验证码错误");
             redisService.delete(email);
         } else if (userLoginDTO.getPassword() != null) {
             Assert.isEquals(userLoginDTO.getPassword(), userPO.getPassword(), "密码错误");
@@ -60,7 +56,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserPO> implements 
         UserPO userPO = this.getOne(Wrappers.<UserPO>query().eq("email", email));
         Assert.isNull(userPO, "邮箱已经被注册");
 
-        String checkCode = redisService.getCheckCode(email);
+        String checkCode = redisService.get(RedisPrefix.EMAIL + email);
         Assert.isEquals(checkCode, userSignupDTO.getCheckCode(), "验证码错误");
 
         String password = userSignupDTO.getPassword();
@@ -90,6 +86,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserPO> implements 
         if (!list.isEmpty()) {
             userPO.setGmtModified(new Date());
             this.updateById(userPO);
+            redisService.deleteUser(userPO.getId());
             return String.join(",", list) + "更新成功";
         }
 

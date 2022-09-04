@@ -30,4 +30,12 @@ public class ExceptionHandlerAspect {
         log.info(msg + ":" + e.getMessage());
         return ResultUtils.error(TOKEN_ERROR_CODE, msg);
     }
+
+    @ExceptionHandler({Exception.class})
+    public Result<Void> handler(Exception e) {
+        String msg = "未知错误，请联系管理员";
+
+        log.error("为处理的错误",e);
+        return ResultUtils.error(msg);
+    }
 }

@@ -1,6 +1,7 @@
-package com.hezhi3f.blog.common.validate.validator;
+package com.hezhi3f.blog.common.validate.validator.impl;
 
 import com.hezhi3f.blog.common.validate.annotation.Required;
+import com.hezhi3f.blog.common.validate.validator.AbstractValidator;
 import org.springframework.stereotype.Component;
 
 @Component

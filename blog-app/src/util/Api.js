@@ -10,6 +10,7 @@ const api = (url, data = {}, func = () => { }) => {
       if (ok) {
         return func(data)
       } else {
+        console.log('res=',res);
         message.error(`${msg}[${code}]`)
         if (code === 500) {
           window.sessionStorage.clear()

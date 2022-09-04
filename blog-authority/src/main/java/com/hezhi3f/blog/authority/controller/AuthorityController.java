@@ -1,19 +1,12 @@
 package com.hezhi3f.blog.authority.controller;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.interfaces.DecodedJWT;
 import com.hezhi3f.blog.authority.service.AuthorityService;
-import com.hezhi3f.blog.common.entity.authority.AuthorityPO;
 import com.hezhi3f.blog.common.entity.result.Result;
 import com.hezhi3f.blog.common.entity.user.UserPO;
-import com.hezhi3f.blog.common.exception.BlogException;
-import com.hezhi3f.blog.common.util.Assert;
 import com.hezhi3f.blog.common.util.ResultUtils;
-import com.hezhi3f.blog.common.util.TokenUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController

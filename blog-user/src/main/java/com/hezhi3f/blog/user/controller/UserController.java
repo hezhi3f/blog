@@ -1,10 +1,13 @@
 package com.hezhi3f.blog.user.controller;
 
 
+import com.alibaba.fastjson.JSON;
 import com.hezhi3f.blog.common.context.UserContext;
 import com.hezhi3f.blog.common.entity.result.Result;
 import com.hezhi3f.blog.common.entity.user.*;
 import com.hezhi3f.blog.common.exception.BlogException;
+import com.hezhi3f.blog.common.service.RedisPrefix;
+import com.hezhi3f.blog.common.service.RedisService;
 import com.hezhi3f.blog.common.util.ResultUtils;
 import com.hezhi3f.blog.common.validate.annotation.Validated;
 import com.hezhi3f.blog.user.api.AuthorityService;
@@ -17,6 +20,8 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final UserService userService;
     private final AuthorityService authorityService;
+
+    private final RedisService redisService;
 
     @PostMapping("/login")
     public Result<String> login(@Validated @RequestBody UserLoginDTO userLoginDTO) {
@@ -34,6 +39,8 @@ public class UserController {
     public Result<String> update(
             @Validated @RequestBody UserUpdateDTO userUpdateDTO) {
         String updateInfo = userService.update(userUpdateDTO);
+        Long id = UserContext.get().getId();
+        redisService.delete(RedisPrefix.USER + id);
         return ResultUtils.success(updateInfo);
     }
 
@@ -46,8 +53,16 @@ public class UserController {
 
     @PostMapping("/get")
     public Result<UserPO> get(@RequestParam Long id) {
-        UserPO userPO = userService.get(id).orElseThrow(() -> new BlogException("用户不存在"));
-        return ResultUtils.success(userPO);
+        // 从缓存中读取
+        String str = redisService.get(RedisPrefix.USER + id);
+        UserPO po = JSON.parseObject(str, UserPO.class);
+        // 没有再走数据库
+        if (po == null) {
+            po = userService.get(id).orElseThrow(() -> new BlogException("用户不存在"));
+            redisService.set(RedisPrefix.USER, JSON.toJSONString(po));
+        }
+
+        return ResultUtils.success(po);
     }
 
     @RequestMapping("/nickname")
@@ -57,8 +72,9 @@ public class UserController {
     }
 
     @Autowired
-    public UserController(UserService userService, AuthorityService authorityService) {
+    public UserController(UserService userService, AuthorityService authorityService, RedisService redisService) {
         this.userService = userService;
         this.authorityService = authorityService;
+        this.redisService = redisService;
     }
 }

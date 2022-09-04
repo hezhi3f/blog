@@ -1,10 +1,12 @@
-package com.hezhi3f.blog.common.validate.validator;
+package com.hezhi3f.blog.common.validate.validator.impl;
 
 import com.hezhi3f.blog.common.validate.annotation.Length;
+import com.hezhi3f.blog.common.validate.validator.AbstractValidator;
 import org.springframework.stereotype.Component;
 
 @Component
 public class LengthValidator extends AbstractValidator<Length> {
+
     @Override
     protected String judge(Object o, Length length) {
         int min = length.min();

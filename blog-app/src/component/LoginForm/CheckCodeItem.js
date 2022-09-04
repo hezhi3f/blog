@@ -21,13 +21,13 @@ const CheckCodeItem = () => {
 
   const handleClick = () => {
     const email = form.getFieldValue('email')
-    api('/verify/email', { email })
+    api(`/captcha/setEmail?email=${email}`)
     setState({ disabled: true, timeout: 30 })
     countDown(30)
   }
 
   return (
-    <Form.Item name='checkCode'>
+    <Form.Item name='captcha'>
       <Row>
         <Col span={16}>
           <Input placeholder='验证码' />

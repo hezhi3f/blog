@@ -1,4 +1,4 @@
-package com.hezhi3f.blogcaptcha;
+package com.hezhi3f.blog.captcha;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

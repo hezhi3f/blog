@@ -1,3 +1,4 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-com.hezhi3f.blog.common.aspect.ValidateAspect,\
-com.hezhi3f.blog.common.aspect.ExceptionHandlerAspect
+com.hezhi3f.blog.common.autoconfiguration.ExceptionHandlerAutoConfiguration,\
+com.hezhi3f.blog.common.autoconfiguration.ValidateAutoConfiguration,\
+com.hezhi3f.blog.common.autoconfiguration.RedisServiceAutoConfiguration

@@ -1,14 +1,10 @@
 spring:
   application:
-    name: BLOG-ARTICLE-SERVICE
+    name: BLOG-CAPTCHA-SERVICE
   cloud:
     nacos:
       server-addr: 43.143.70.32:8848
       config:
-        shared-configs:
-          - data-id: COMMON.YAML
-            group: BLOG
         name: ${spring.application.name}
         file-extension: YAML
         group: BLOG
-

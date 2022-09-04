@@ -1,6 +1,6 @@
 import { PageHeader, Form, Button, Input, Divider, Radio, message } from 'antd'
 import React, { useEffect, useState } from 'react'
-import { useNavigate, useLocation } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import ArticleTag from './ArticleTag'
 import api from '../../util/Api'
 
@@ -11,7 +11,7 @@ const ArticleUpdateForm = (props) => {
 
   useEffect(() => {
     api(`/article/get?articleId=${articleId}`, {}, setArticles)
-  }, [])
+  }, [articleId])
 
   const onFinish = values => {
     console.log('values', values);

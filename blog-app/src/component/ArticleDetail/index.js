@@ -4,13 +4,9 @@ import {
   CommentOutlined,
   DislikeOutlined,
   ShareAltOutlined,
-  DownOutlined,
-  UpOutlined,
   LikeOutlined,
-  StarOutlined,
   HeartOutlined,
   EllipsisOutlined,
-  EditOutlined
 } from '@ant-design/icons'
 import './index.css'
 import { useLocation, useNavigate } from 'react-router-dom'
@@ -19,10 +15,6 @@ const ArticleDetail = () => {
   const navigate = useNavigate()
   const location = useLocation()
   const article = location.state
-
-  const handleUpdate = () => {
-    navigate('/article/update', { state: article.articleId })
-  }
 
   return (
     <PageHeader
