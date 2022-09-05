@@ -3,7 +3,9 @@ spring:
     name: BLOG-ARTICLE-SERVICE
   cloud:
     nacos:
-      server-addr: 43.143.70.32:8848
+      server-addr: 10.0.4.16:8848
+      username: nacos
+      password: nacos
       config:
         shared-configs:
           - data-id: COMMON.YAML

@@ -23,10 +23,13 @@ public class ValidateAspect {
     private final List<Validator> validators;
 
     @Pointcut("@annotation(org.springframework.web.bind.annotation.RequestMapping)")
-    public void pointCut() {
+    public void requestMapping() {
     }
+    @Pointcut("@annotation(org.springframework.web.bind.annotation.PostMapping)")
+    public void postMapping(){}
 
-    @Before("pointCut()")
+
+    @Before("requestMapping() || postMapping()")
     public void before(JoinPoint joinPoint) throws IllegalAccessException {
         Object[] args = joinPoint.getArgs();
         MethodSignature signature = (MethodSignature) joinPoint.getSignature();

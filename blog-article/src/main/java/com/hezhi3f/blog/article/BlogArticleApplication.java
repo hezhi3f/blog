@@ -8,9 +8,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScans;
 
 @SpringBootApplication
-@ComponentScans(
-        @ComponentScan("com.hezhi3f.blog.common")
-)
 @EnableDiscoveryClient
 @EnableFeignClients
 public class BlogArticleApplication {

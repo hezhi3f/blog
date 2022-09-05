@@ -3,7 +3,6 @@ package com.hezhi3f.blog.article.controller;
 import com.hezhi3f.blog.article.service.ArticleService;
 import com.hezhi3f.blog.common.context.UserContext;
 import com.hezhi3f.blog.common.entity.article.ArticleCreateDTO;
-import com.hezhi3f.blog.common.entity.article.ArticlePO;
 import com.hezhi3f.blog.common.entity.article.ArticleUpdateDTO;
 import com.hezhi3f.blog.common.entity.article.ArticleVO;
 import com.hezhi3f.blog.common.entity.result.Result;
@@ -19,25 +18,26 @@ import java.util.List;
 public class ArticleController {
     private final ArticleService articleService;
 
-    @PostMapping("/create")
+    @RequestMapping(value = "/create", method = RequestMethod.POST)
     public Result<Void> create(
             @Validated @RequestBody ArticleCreateDTO articleCreateDTO) {
-        return articleService.create(articleCreateDTO);
+        articleService.create(articleCreateDTO);
+        return ResultUtils.success();
     }
 
-    @PostMapping("/update")
+    @RequestMapping(value = "/update", method = RequestMethod.POST)
     public Result<String> update(@RequestBody ArticleUpdateDTO articleUpdateDTO) {
         String msg = articleService.update(articleUpdateDTO);
         return ResultUtils.success(msg);
     }
 
-    @RequestMapping("/get")
+    @RequestMapping(value = "/get", method = RequestMethod.POST)
     public Result<ArticleVO> getArticleVOByArticleId(@RequestParam("articleId") Long articleId) {
         ArticleVO vo = articleService.getArticleVOByArticleId(articleId);
         return ResultUtils.success(vo);
     }
 
-    @RequestMapping("/list")
+    @RequestMapping(value = "/list", method = RequestMethod.POST)
     public Result<List<ArticleVO>> getLoginUserArticleList() {
         List<ArticleVO> vos = articleService.listByUserId(UserContext.get().getId());
         return ResultUtils.success(vos);

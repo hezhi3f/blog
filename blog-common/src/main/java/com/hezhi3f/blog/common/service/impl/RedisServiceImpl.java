@@ -61,7 +61,6 @@ public class RedisServiceImpl implements RedisService {
     }
 
 
-    @Autowired
     public RedisServiceImpl(StringRedisTemplate template) {
         this.template = template;
     }

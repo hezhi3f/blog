@@ -9,11 +9,12 @@ const MainPage = () => {
   const [ready, setReady] = useState(false)
 
   useEffect(() => {
-    api('/article/list', {}, data => {
-      setArticles(data)
-      setReady(true)
-    })
-
+    if (window.sessionStorage.getItem('login') === 'true') {
+      api('/article/list', {}, data => {
+        setArticles(data)
+        setReady(true)
+      })
+    }
   }, [])
 
   console.log('ready', ready);

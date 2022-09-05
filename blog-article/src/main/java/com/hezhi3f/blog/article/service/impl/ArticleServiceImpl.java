@@ -32,7 +32,8 @@ public class ArticleServiceImpl
     private final ArticleTagService tagService;
 
     @Override
-    public Result<Void> create(ArticleCreateDTO dto) {
+    @Transactional
+    public void create(ArticleCreateDTO dto) {
         ArticlePO po = new ArticlePO();
 
         Long id = UserContext.get().getId();
@@ -47,12 +48,13 @@ public class ArticleServiceImpl
         ArticleBodyPO body = bodyService.save(dto.getContent());
         po.setArticleBodyId(body.getId());
 
+        if (dto.getTags() != null) {
+            tagService.saveBatch(po.getId(), dto.getTags());
+        }
+
         po.setGmtCreated(new Date());
         this.save(po);
 
-        tagService.saveBatch(po.getId(), dto.getTags());
-
-        return ResultUtils.success();
     }
 
     @Override

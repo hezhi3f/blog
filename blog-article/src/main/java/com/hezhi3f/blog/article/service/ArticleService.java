@@ -10,7 +10,7 @@ import com.hezhi3f.blog.common.entity.result.Result;
 import java.util.List;
 
 public interface ArticleService extends IService<ArticlePO> {
-    Result<Void> create(ArticleCreateDTO articleCreateDTO);
+    void create(ArticleCreateDTO articleCreateDTO);
 
     ArticleVO getArticleVOByArticleId(Long articleId);
 

@@ -10,9 +10,6 @@ import org.springframework.context.annotation.ComponentScans;
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableFeignClients
-@ComponentScans({
-        @ComponentScan("com.hezhi3f.blog.common")
-})
 public class BlogAuthorityApplication {
 
     public static void main(String[] args) {

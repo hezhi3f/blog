@@ -9,9 +9,6 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ComponentScans;
 
 @EnableDiscoveryClient
-@ComponentScans({
-        @ComponentScan("com.hezhi3f.blog.common")
-})
 @SpringBootApplication(exclude = {DataSourceAutoConfiguration.class, HibernateJpaAutoConfiguration.class})
 public class BlogCaptchaApplication {
 
