@@ -1,11 +1,7 @@
 package com.hezhi3f.blog.article.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
-import com.hezhi3f.blog.common.entity.article.ArticleCreateDTO;
-import com.hezhi3f.blog.common.entity.article.ArticlePO;
-import com.hezhi3f.blog.common.entity.article.ArticleUpdateDTO;
-import com.hezhi3f.blog.common.entity.article.ArticleVO;
-import com.hezhi3f.blog.common.entity.result.Result;
+import com.hezhi3f.blog.common.entity.article.*;
 
 import java.util.List;
 
@@ -17,4 +13,6 @@ public interface ArticleService extends IService<ArticlePO> {
     List<ArticleVO> listByUserId(Long userId);
 
     String update(ArticleUpdateDTO articleUpdateDTO);
+
+    ArticlePageVO main(ArticleMainDTO dto);
 }

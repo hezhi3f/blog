@@ -1,6 +1,8 @@
 package com.hezhi3f.blog.article.service.impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hezhi3f.blog.article.api.UserService;
 import com.hezhi3f.blog.article.dao.ArticleMapper;
@@ -10,9 +12,7 @@ import com.hezhi3f.blog.article.service.ArticleService;
 import com.hezhi3f.blog.article.service.ArticleTagService;
 import com.hezhi3f.blog.common.context.UserContext;
 import com.hezhi3f.blog.common.entity.article.*;
-import com.hezhi3f.blog.common.entity.result.Result;
 import com.hezhi3f.blog.common.util.Assert;
-import com.hezhi3f.blog.common.util.ResultUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -61,31 +61,9 @@ public class ArticleServiceImpl
     @Transactional
     public ArticleVO getArticleVOByArticleId(Long articleId) {
         Assert.isNotNull(articleId, "articleId不能为空");
-        ArticleVO vo = new ArticleVO();
         ArticlePO po = this.getById(articleId);
         Assert.isNotNull(po, "文章不存在");
-
-        Long userId = po.getUserId();
-        Result<String> userPO = userService.getNickname(userId);
-
-        vo.setArticleId(articleId);
-        vo.setNickName(userPO.getData());
-        vo.setTitle(po.getTitle());
-        vo.setGmtCreated(po.getGmtCreated());
-        vo.setGmtModified(po.getGmtModified());
-
-        ArticleKindPO kind = kindService.getById(po.getArticleKindId());
-        vo.setKind(kind.getKind());
-
-        ArticleBodyPO body = bodyService.getById(po.getArticleBodyId());
-        vo.setContent(body.getContent());
-
-        List<String> tags = tagService.getTags(articleId).stream()
-                .map(ArticleTagPO::getTag)
-                .collect(Collectors.toList());
-        vo.setTags(tags);
-
-        return vo;
+        return view(po);
     }
 
     @Override
@@ -124,6 +102,49 @@ public class ArticleServiceImpl
         }
 
         return sb.toString();
+    }
+
+    @Override
+    public ArticlePageVO main(ArticleMainDTO dto) {
+        ArticlePageVO vo = new ArticlePageVO();
+        QueryWrapper<ArticlePO> order = Wrappers.<ArticlePO>query().orderByDesc("gmt_created");
+        Page<ArticlePO> page = this.page(new Page<>(dto.getPage(), dto.getSize()), order);
+        List<ArticlePO> records = page.getRecords();
+        vo.setPages(page.getPages());
+        vo.setSize(page.getSize());
+        vo.setTotal(page.getTotal());
+        vo.setCurrent(page.getCurrent());
+        vo.setRecords(records.stream().map(this::view).collect(Collectors.toList()));
+        return vo;
+    }
+
+
+    private ArticleVO view(ArticlePO po) {
+        ArticleVO vo = new ArticleVO();
+
+        Long userId = po.getUserId();
+        String nickname = userService.getNickname(userId).getData();
+
+        vo.setArticleId(po.getId());
+        vo.setNickName(nickname);
+        vo.setTitle(po.getTitle());
+        vo.setGmtCreated(po.getGmtCreated());
+        vo.setGmtModified(po.getGmtModified());
+
+        ArticleKindPO kind = kindService.getById(po.getArticleKindId());
+        vo.setKind(kind.getKind());
+
+        ArticleBodyPO body = bodyService.getById(po.getArticleBodyId());
+        vo.setContent(body.getContent());
+
+        List<String> tags = tagService.getTags(po.getId())
+                .stream()
+                .map(ArticleTagPO::getTag)
+                .collect(Collectors.toList());
+
+        vo.setTags(tags);
+
+        return vo;
     }
 
     private void updateTitle(ArticleUpdateDTO dto, ArticlePO po, List<String> msg) {

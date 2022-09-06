@@ -4,6 +4,7 @@ package com.hezhi3f.blog.common.autoconfiguration;
 import com.hezhi3f.blog.common.service.RedisService;
 import com.hezhi3f.blog.common.service.impl.RedisServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,6 +20,7 @@ public class RedisServiceAutoConfiguration {
 
     private final StringRedisTemplate stringRedisTemplate;
 
+    @ConditionalOnMissingBean
     @Bean
     public RedisService redisService() {
         return new RedisServiceImpl(stringRedisTemplate);

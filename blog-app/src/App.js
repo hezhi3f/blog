@@ -1,6 +1,8 @@
 import React, { useEffect } from "react"
 import Route from "./route"
 import { useNavigate, useLocation } from 'react-router-dom'
+import { ConfigProvider } from "antd"
+import zhCN from 'antd/es/locale/zh_CN';
 
 
 const App = () => {
@@ -18,7 +20,10 @@ const App = () => {
     }
   })
   return (
+    <ConfigProvider locale={zhCN}>
     <Route />
+    </ConfigProvider>
+
   )
 }
 

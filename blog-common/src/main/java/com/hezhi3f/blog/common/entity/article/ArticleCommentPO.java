@@ -8,20 +8,20 @@ import lombok.Data;
 
 import java.util.Date;
 
+@TableName("blog_article_comment")
 @Data
-@TableName("blog_article")
-public class ArticlePO {
+public class ArticleCommentPO {
     @TableId(type = IdType.AUTO)
     private Long id;
     @TableField("user_id")
     private Long userId;
-    private String title;
-    @TableField("article_kind_id")
-    private Integer articleKindId;
-    @TableField("article_body_id")
-    private Long articleBodyId;
+    @TableField("super_comment_id")
+    private Long superCommentId;
+    @TableField("article_id")
+    private Long articleId;
+    private String content;
+    @TableField("gmt_created")
     private Date gmtCreated;
-    private Date gmtModified;
-//    @TableField("is_deleted")
+    @TableField("id_deleted")
     private Boolean deleted;
 }

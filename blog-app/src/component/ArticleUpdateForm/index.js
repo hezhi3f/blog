@@ -14,8 +14,10 @@ const ArticleUpdateForm = (props) => {
   }, [articleId])
 
   const onFinish = values => {
-    console.log('values', values);
-    api('/article/update', {...values,articleId:1}, message.success)
+    api('/article/update', { ...values, articleId: 1 }, data => {
+      message.success(data)
+      navigate(-1)
+    })
   }
 
   return (
@@ -33,8 +35,8 @@ const ArticleUpdateForm = (props) => {
           labelCol={{ span: 2 }}
           wrapperCol={{ span: 22 }}
         >
-          <Form.Item name={'articleId'} initialValue={1}>
-            <Input hidden />
+          <Form.Item name={'articleId'} initialValue={1} hidden>
+            <Input />
           </Form.Item>
           <Form.Item
             name={'title'}
@@ -52,7 +54,7 @@ const ArticleUpdateForm = (props) => {
           >
             <Input.TextArea
               bordered={false}
-              autoSize={{ minRows: 20 }}
+              autoSize
             />
           </Form.Item>
           <Divider
@@ -84,7 +86,7 @@ const ArticleUpdateForm = (props) => {
               type="primary"
               htmlType="submit"
             >
-              立即发布
+              立即修改
             </Button>
           </Form.Item>
         </Form>

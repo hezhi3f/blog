@@ -2,9 +2,7 @@ package com.hezhi3f.blog.article.controller;
 
 import com.hezhi3f.blog.article.service.ArticleService;
 import com.hezhi3f.blog.common.context.UserContext;
-import com.hezhi3f.blog.common.entity.article.ArticleCreateDTO;
-import com.hezhi3f.blog.common.entity.article.ArticleUpdateDTO;
-import com.hezhi3f.blog.common.entity.article.ArticleVO;
+import com.hezhi3f.blog.common.entity.article.*;
 import com.hezhi3f.blog.common.entity.result.Result;
 import com.hezhi3f.blog.common.util.ResultUtils;
 import com.hezhi3f.blog.common.validate.annotation.Validated;
@@ -17,6 +15,12 @@ import java.util.List;
 @RequestMapping("/article")
 public class ArticleController {
     private final ArticleService articleService;
+
+    @PostMapping("/main")
+    public Result<ArticlePageVO> main(@RequestBody ArticleMainDTO dto) {
+        ArticlePageVO vo = articleService.main(dto);
+        return ResultUtils.success(vo);
+    }
 
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     public Result<Void> create(

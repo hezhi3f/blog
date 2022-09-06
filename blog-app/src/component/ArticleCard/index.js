@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Button, Tag, Col, Row, PageHeader } from 'antd'
+import { Button, Tag, Col, Row, PageHeader, message } from 'antd'
 import {
   CommentOutlined,
   ShareAltOutlined,
@@ -17,34 +17,39 @@ const ArticleCard = (props) => {
   const { article } = props
   const navigate = useNavigate()
   const [open, setOpen] = useState(false)
+
+  const handleClick = () => {
+    message.info('小河之已经在拼命开发中啦~')
+  }
+
   const actions = (
     <Row>
       <Col flex={3}>
-        <Button type="text">
+        <Button type="text" onClick={handleClick}>
           <LikeOutlined />
           赞同1.3k
         </Button>
       </Col>
       <Col flex={3}>
-        <Button type='text'>
+        <Button type='text' onClick={handleClick}>
           <CommentOutlined />
           19条评论
         </Button>
       </Col>
       <Col flex={2}>
-        <Button type='text'>
+        <Button type='text' onClick={handleClick}>
           <ShareAltOutlined />
           分享
         </Button>
       </Col>
       <Col flex={2}>
-        <Button type='text'>
+        <Button type='text' onClick={handleClick}>
           <HeartOutlined />
           喜欢
         </Button>
       </Col>
       <Col flex={1}>
-        <Button type='text'>
+        <Button type='text' onClick={handleClick}>
           <EllipsisOutlined />
         </Button>
       </Col>
@@ -60,15 +65,15 @@ const ArticleCard = (props) => {
   )
 
   const handleTitleClick = () => {
-    navigate('/detail', { state: article })
+    navigate('/detail', { state: article.articleId })
   }
 
   return (
     <PageHeader
       title={
         <span
-        style={{'cursor':'pointer'}}
-        onClick={handleTitleClick}
+          style={{ 'cursor': 'pointer' }}
+          onClick={handleTitleClick}
         >
           {article.title}
         </span>
@@ -101,7 +106,6 @@ const ArticleCard = (props) => {
           }
         </div>
       }
-
     </PageHeader>
   )
 }
