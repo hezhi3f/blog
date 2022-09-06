@@ -63,7 +63,7 @@ public class ArticleServiceImpl
         Assert.isNotNull(articleId, "articleId不能为空");
         ArticlePO po = this.getById(articleId);
         Assert.isNotNull(po, "文章不存在");
-        return view(po);
+        return poToVo(po);
     }
 
     @Override
@@ -114,12 +114,12 @@ public class ArticleServiceImpl
         vo.setSize(page.getSize());
         vo.setTotal(page.getTotal());
         vo.setCurrent(page.getCurrent());
-        vo.setRecords(records.stream().map(this::view).collect(Collectors.toList()));
+        vo.setRecords(records.stream().map(this::poToVo).collect(Collectors.toList()));
         return vo;
     }
 
 
-    private ArticleVO view(ArticlePO po) {
+    private ArticleVO poToVo(ArticlePO po) {
         ArticleVO vo = new ArticleVO();
 
         Long userId = po.getUserId();

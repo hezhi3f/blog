@@ -17,7 +17,8 @@ public class ArticleController {
     private final ArticleService articleService;
 
     @PostMapping("/main")
-    public Result<ArticlePageVO> main(@RequestBody ArticleMainDTO dto) {
+    public Result<ArticlePageVO> main(
+            @Validated @RequestBody ArticleMainDTO dto) {
         ArticlePageVO vo = articleService.main(dto);
         return ResultUtils.success(vo);
     }
