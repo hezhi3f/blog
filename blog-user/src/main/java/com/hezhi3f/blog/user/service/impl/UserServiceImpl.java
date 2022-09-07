@@ -34,9 +34,9 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserPO> implements 
         Assert.isNotNull(userPO, "该邮箱还未注册");
 
         if (userLoginDTO.getCaptcha() != null) {
-            String captcha = redisService.get(RedisPrefix.EMAIL + email);
+            String captcha = redisService.getCaptcha(email);
             Assert.isEquals(captcha, userLoginDTO.getCaptcha(), "验证码错误");
-            redisService.delete(email);
+            redisService.deleteCaptcha(email);
         } else if (userLoginDTO.getPassword() != null) {
             Assert.isEquals(userLoginDTO.getPassword(), userPO.getPassword(), "密码错误");
         } else {
@@ -56,7 +56,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, UserPO> implements 
         UserPO userPO = this.getOne(Wrappers.<UserPO>query().eq("email", email));
         Assert.isNull(userPO, "邮箱已经被注册");
 
-        String checkCode = redisService.get(RedisPrefix.EMAIL + email);
+        String checkCode = redisService.getCaptcha(email);
         Assert.isEquals(checkCode, userSignupDTO.getCheckCode(), "验证码错误");
 
         String password = userSignupDTO.getPassword();

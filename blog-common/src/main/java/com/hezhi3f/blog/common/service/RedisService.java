@@ -12,11 +12,19 @@ public interface RedisService {
 
     void deleteUser(Long id);
 
-    void set(String key, String value);
+    void addArticleLike(Long articleId, Long userId);
 
-    void set(String key, String value, Duration timeout);
+    void deleteArticleLike(Long articleId, Long userId);
 
-    String get(String key);
+    Long countArticleLike(Long articleId);
 
-    void delete(String key);
+    Boolean isArticleLike(Long articleId, Long userId);
+
+    void deleteCaptcha(String email);
+
+    String getCaptcha(String email);
+
+    void setCaptcha(String email, String captcha, Duration timeout);
+
+    void setCaptcha(String email, String captcha);
 }

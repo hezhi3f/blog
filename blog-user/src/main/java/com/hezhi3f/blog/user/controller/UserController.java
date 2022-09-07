@@ -40,7 +40,7 @@ public class UserController {
             @Validated @RequestBody UserUpdateDTO userUpdateDTO) {
         String updateInfo = userService.update(userUpdateDTO);
         Long id = UserContext.get().getId();
-        redisService.delete(RedisPrefix.USER + id);
+        redisService.deleteUser(id);
         return ResultUtils.success(updateInfo);
     }
 
@@ -54,12 +54,11 @@ public class UserController {
     @PostMapping("/get")
     public Result<UserPO> get(@RequestParam Long id) {
         // 从缓存中读取
-        String str = redisService.get(RedisPrefix.USER + id);
-        UserPO po = JSON.parseObject(str, UserPO.class);
+        UserPO po = redisService.getUser(id);
         // 没有再走数据库
         if (po == null) {
             po = userService.get(id).orElseThrow(() -> new BlogException("用户不存在"));
-            redisService.set(RedisPrefix.USER, JSON.toJSONString(po));
+            redisService.setUser(po);
         }
 
         return ResultUtils.success(po);

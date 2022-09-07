@@ -11,12 +11,30 @@ import {
 } from '@ant-design/icons'
 import './index.css'
 import { useNavigate } from 'react-router-dom'
+import api from '../../util/Api'
+import ArticleComment from '../ArticleComment'
 
 
 const ArticleCard = (props) => {
   const { article } = props
   const navigate = useNavigate()
   const [open, setOpen] = useState(false)
+  const [like, setLike] = useState(article.like)
+  const [comment, setComment] = useState(false)
+
+  const handleLikeClick = () => {
+    if (like) {
+      api(`/article/like/del?articleId=${article.articleId}`, {}, () => {
+        message.success("取消点赞成功")
+      })
+    } else {
+      api(`/article/like/add?articleId=${article.articleId}`, {}, () => {
+        message.success("点赞成功")
+      })
+    }
+
+    setLike(!like)
+  }
 
   const handleClick = () => {
     message.info('小河之已经在拼命开发中啦~')
@@ -25,13 +43,13 @@ const ArticleCard = (props) => {
   const actions = (
     <Row>
       <Col flex={3}>
-        <Button type="text" onClick={handleClick}>
+        <Button type={like ? "primary" : "text"} onClick={handleLikeClick}>
           <LikeOutlined />
           赞同1.3k
         </Button>
       </Col>
       <Col flex={3}>
-        <Button type='text' onClick={handleClick}>
+        <Button type='text' onClick={() => { setComment(!comment) }}>
           <CommentOutlined />
           19条评论
         </Button>
@@ -61,14 +79,14 @@ const ArticleCard = (props) => {
           </Button>
         }
       </Col>
-    </Row>
+    </Row >
   )
 
   const handleTitleClick = () => {
     navigate('/detail', { state: article.articleId })
   }
 
-  return (
+  return (<>
     <PageHeader
       title={
         <span
@@ -106,7 +124,12 @@ const ArticleCard = (props) => {
           }
         </div>
       }
+
     </PageHeader>
+    <div style={{ 'padding': '16px 24px' }}>
+      {!comment || <ArticleComment articleId={article.articleId} />}
+    </div>
+  </>
   )
 }
 

@@ -15,4 +15,6 @@ public interface ArticleService extends IService<ArticlePO> {
     String update(ArticleUpdateDTO articleUpdateDTO);
 
     ArticlePageVO main(ArticleMainDTO dto);
+
+    ArticlePageVO mine(ArticleMainDTO dto);
 }

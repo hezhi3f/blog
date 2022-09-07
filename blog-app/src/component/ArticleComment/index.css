@@ -1,0 +1,14 @@
+.action-container {
+  display: flex;
+}
+
+.action-left {
+  justify-content: flex-start;
+  display: flex;
+}
+
+.action-right {
+  flex: 1; 
+  justify-content: flex-end; 
+  display: flex;
+}

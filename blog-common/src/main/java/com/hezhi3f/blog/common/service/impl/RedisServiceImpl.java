@@ -5,7 +5,6 @@ import com.hezhi3f.blog.common.entity.user.UserPO;
 import com.hezhi3f.blog.common.service.RedisPrefix;
 import com.hezhi3f.blog.common.service.RedisService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +18,6 @@ public class RedisServiceImpl implements RedisService {
 
     @Override
     public void setUser(UserPO userPO) {
-        log.info("redis缓存set:{}", userPO);
         template.opsForValue()
                 .set(RedisPrefix.USER + userPO.getId(),
                         JSON.toJSONString(userPO));
@@ -28,36 +26,51 @@ public class RedisServiceImpl implements RedisService {
     @Override
     public UserPO getUser(Long id) {
         String str = template.opsForValue().get(RedisPrefix.USER + id);
-        log.info("redis缓存get:{}", str);
         return JSON.parseObject(str, UserPO.class);
     }
 
     @Override
     public void deleteUser(Long id) {
-        log.info("redis缓存delete:{}", id);
         String key = RedisPrefix.USER + id;
         template.delete(key);
     }
 
-    @Override
-    public void set(String key, String value) {
-        template.opsForValue().set(key, value);
+    public void addArticleLike(Long articleId, Long userId) {
+        template.opsForSet().add(RedisPrefix.ARTICLE_LIKE + articleId, String.valueOf(userId));
+    }
+
+    public void deleteArticleLike(Long articleId, Long userId) {
+        template.opsForSet().remove(RedisPrefix.ARTICLE_LIKE + articleId, String.valueOf(userId));
+    }
+
+    public Long countArticleLike(Long articleId) {
+        return template.opsForSet().size(RedisPrefix.ARTICLE_LIKE + articleId);
     }
 
     @Override
-    public void set(String key, String value, Duration timeout) {
-        template.opsForValue().set(key, value, timeout);
+    public Boolean isArticleLike(Long articleId, Long userId) {
+        return template.opsForSet().isMember(RedisPrefix.ARTICLE_LIKE + articleId, String.valueOf(userId));
     }
 
     @Override
-    public String get(String key) {
-        return template.opsForValue().get(key);
+    public void deleteCaptcha(String email) {
+        template.delete(RedisPrefix.CAPTCHA + email);
+    }
+
+    @Override
+    public String getCaptcha(String email) {
+        return template.opsForValue().get(RedisPrefix.CAPTCHA + email);
     }
 
 
     @Override
-    public void delete(String email) {
-        template.opsForValue().getAndDelete("blog:email:" + email);
+    public void setCaptcha(String email, String captcha, Duration timeout) {
+        template.opsForValue().set(RedisPrefix.CAPTCHA + email, captcha, timeout);
+    }
+
+    @Override
+    public void setCaptcha(String email, String captcha) {
+        this.setCaptcha(email, captcha, Duration.ofMinutes(10));
     }
 
 

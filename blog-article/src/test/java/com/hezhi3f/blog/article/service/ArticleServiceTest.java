@@ -14,11 +14,6 @@ public class ArticleServiceTest {
 
     @Test
     void testPage() {
-        ArticleMainDTO dto = new ArticleMainDTO();
-        dto.setPage(1);
-        dto.setSize(5);
-        ArticlePageVO main = articleService.main(dto);
-
 
 
     }

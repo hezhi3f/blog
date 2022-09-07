@@ -33,21 +33,18 @@ const ArticleDetail = () => {
         <PageHeader
           onBack={() => { navigate(-1) }}
           title={article.title}
-          subTitle={article.nickName}
-          tags={<>
-            分类：<Tag>  {article.kind}</Tag>
-            标签：{article.tags.map(tag => <Tag>#{tag}</Tag>)}
-          </>}
-          extra={<Button type='primary' onClick={handleUpdate}>修改</Button>}
+          subTitle={<Tag>{article.kind}</Tag>}
+          extra={!article.mine || <Button type='primary' onClick={handleUpdate}>修改</Button>}
         >
-
+          <div style={{'padding': '4px 11px','fontWeight':'600'}}>
+            {article.nickName} {article.tags.map(tag => `#${tag}`)}
+          </div>
           <Input.TextArea
             bordered={false}
             autoSize
             readOnly
             value={article.content}
           />
-
           <div className='aritcle-time'>
             {
               article.gmtModified === null
@@ -94,7 +91,6 @@ const ArticleDetail = () => {
         </PageHeader>
       }
     </>
-
   )
 }
 

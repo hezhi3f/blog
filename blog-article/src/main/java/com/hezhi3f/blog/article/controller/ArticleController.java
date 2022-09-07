@@ -23,6 +23,13 @@ public class ArticleController {
         return ResultUtils.success(vo);
     }
 
+    @PostMapping("/mine")
+    public Result<ArticlePageVO> mine(
+            @Validated @RequestBody ArticleMainDTO dto) {
+        ArticlePageVO vo = articleService.mine(dto);
+        return ResultUtils.success(vo);
+    }
+
     @RequestMapping(value = "/create", method = RequestMethod.POST)
     public Result<Void> create(
             @Validated @RequestBody ArticleCreateDTO articleCreateDTO) {

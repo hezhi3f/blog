@@ -1,6 +1,5 @@
 package com.hezhi3f.blog.article.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hezhi3f.blog.article.dao.ArticleTagMapper;

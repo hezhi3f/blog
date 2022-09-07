@@ -6,10 +6,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.hezhi3f.blog.article.api.UserService;
 import com.hezhi3f.blog.article.dao.ArticleMapper;
-import com.hezhi3f.blog.article.service.ArticleBodyService;
-import com.hezhi3f.blog.article.service.ArticleKindService;
-import com.hezhi3f.blog.article.service.ArticleService;
-import com.hezhi3f.blog.article.service.ArticleTagService;
+import com.hezhi3f.blog.article.service.*;
 import com.hezhi3f.blog.common.context.UserContext;
 import com.hezhi3f.blog.common.entity.article.*;
 import com.hezhi3f.blog.common.util.Assert;
@@ -31,6 +28,8 @@ public class ArticleServiceImpl
     private final ArticleKindService kindService;
     private final ArticleTagService tagService;
 
+    private final ArticleLikeService likeService;
+
     @Override
     @Transactional
     public void create(ArticleCreateDTO dto) {
@@ -48,13 +47,12 @@ public class ArticleServiceImpl
         ArticleBodyPO body = bodyService.save(dto.getContent());
         po.setArticleBodyId(body.getId());
 
-        if (dto.getTags() != null) {
-            tagService.saveBatch(po.getId(), dto.getTags());
-        }
-
         po.setGmtCreated(new Date());
         this.save(po);
 
+        if (dto.getTags() != null) {
+            tagService.saveBatch(po.getId(), dto.getTags());
+        }
     }
 
     @Override
@@ -106,11 +104,24 @@ public class ArticleServiceImpl
 
     @Override
     public ArticlePageVO main(ArticleMainDTO dto) {
+        QueryWrapper<ArticlePO> order = Wrappers.<ArticlePO>query()
+                .orderByDesc("gmt_created");
+        return getArticlePageVO(dto, order);
+    }
+
+    @Override
+    public ArticlePageVO mine(ArticleMainDTO dto) {
+        Long id = UserContext.get().getId();
+        QueryWrapper<ArticlePO> order = Wrappers.<ArticlePO>query()
+                .eq("user_id", id)
+                .orderByDesc("gmt_created");
+        return getArticlePageVO(dto, order);
+    }
+
+    private ArticlePageVO getArticlePageVO(ArticleMainDTO dto, QueryWrapper<ArticlePO> order) {
         ArticlePageVO vo = new ArticlePageVO();
-        QueryWrapper<ArticlePO> order = Wrappers.<ArticlePO>query().orderByDesc("gmt_created");
         Page<ArticlePO> page = this.page(new Page<>(dto.getPage(), dto.getSize()), order);
         List<ArticlePO> records = page.getRecords();
-        vo.setPages(page.getPages());
         vo.setSize(page.getSize());
         vo.setTotal(page.getTotal());
         vo.setCurrent(page.getCurrent());
@@ -125,6 +136,7 @@ public class ArticleServiceImpl
         Long userId = po.getUserId();
         String nickname = userService.getNickname(userId).getData();
 
+        vo.setMine(Objects.equals(userId, UserContext.get().getId()));
         vo.setArticleId(po.getId());
         vo.setNickName(nickname);
         vo.setTitle(po.getTitle());
@@ -143,6 +155,9 @@ public class ArticleServiceImpl
                 .collect(Collectors.toList());
 
         vo.setTags(tags);
+
+        Boolean like = likeService.isLike(po.getId());
+        vo.setLike(like);
 
         return vo;
     }
@@ -214,10 +229,12 @@ public class ArticleServiceImpl
     public ArticleServiceImpl(UserService userService,
                               ArticleBodyService bodyService,
                               ArticleKindService kindService,
-                              ArticleTagService tagService) {
+                              ArticleTagService tagService,
+                              ArticleLikeService likeService) {
         this.userService = userService;
         this.bodyService = bodyService;
         this.kindService = kindService;
         this.tagService = tagService;
+        this.likeService = likeService;
     }
 }

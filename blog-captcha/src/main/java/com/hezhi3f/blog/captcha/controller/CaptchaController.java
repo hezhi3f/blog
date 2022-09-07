@@ -1,18 +1,13 @@
 package com.hezhi3f.blog.captcha.controller;
 
 import com.hezhi3f.blog.common.entity.result.Result;
-import com.hezhi3f.blog.common.entity.user.UserPO;
-import com.hezhi3f.blog.common.service.RedisPrefix;
 import com.hezhi3f.blog.common.service.RedisService;
 import com.hezhi3f.blog.common.util.CodeUtils;
 import com.hezhi3f.blog.common.util.ResultUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.time.Duration;
 
 @RestController
 @RequestMapping("/captcha")
@@ -26,14 +21,13 @@ public class CaptchaController {
 
         // todo send email
         // send email
-
-        redisService.set(RedisPrefix.EMAIL + email, captcha, Duration.ofMinutes(10));
+        redisService.setCaptcha(email, captcha);
         return ResultUtils.success();
     }
 
     @RequestMapping("/getEmail")
     public Result<String> getEmail(@RequestParam("email") String email) {
-        String captcha = redisService.get(RedisPrefix.EMAIL + email);
+        String captcha = redisService.getCaptcha(email);
         return ResultUtils.success(captcha);
     }
 

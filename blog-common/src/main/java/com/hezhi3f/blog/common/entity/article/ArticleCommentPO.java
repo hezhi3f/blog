@@ -13,15 +13,17 @@ import java.util.Date;
 public class ArticleCommentPO {
     @TableId(type = IdType.AUTO)
     private Long id;
-    @TableField("user_id")
-    private Long userId;
-    @TableField("super_comment_id")
-    private Long superCommentId;
     @TableField("article_id")
     private Long articleId;
+    @TableField("super_comment_id")
+    private Long superCommentId;
+    @TableField("comment_user_id")
+    private Long commentUserId;
+    @TableField("to_user_id")
+    private Long toUserId;
     private String content;
     @TableField("gmt_created")
     private Date gmtCreated;
-    @TableField("id_deleted")
+    @TableField("is_deleted")
     private Boolean deleted;
 }
