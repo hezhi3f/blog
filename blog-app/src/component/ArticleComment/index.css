@@ -3,12 +3,44 @@
 }
 
 .action-left {
+  align-items: center;
   justify-content: flex-start;
   display: flex;
 }
 
+
+
 .action-right {
-  flex: 1; 
-  justify-content: flex-end; 
+  align-items: center;
+  flex: 1;
+  justify-content: flex-end;
   display: flex;
+}
+
+.comment-from {
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 10px;
+}
+
+.comment-to {
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 10px;
+}
+
+.comment-time {
+  color: gray;
+}
+
+.comment-content {
+  font-size: 14px;
+}
+
+.clickable {
+  cursor: pointer;
+}
+
+.clickable:hover {
+  color: gray;
 }

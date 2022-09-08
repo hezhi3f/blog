@@ -40,94 +40,118 @@ const ArticleCard = (props) => {
     message.info('小河之已经在拼命开发中啦~')
   }
 
+  const handleTitleClick = () => {
+    navigate('/detail', { state: article.articleId })
+  }
+
+  const handleCommentClick = () => {
+    setComment(!comment)
+  }
+
+  const title = (
+    <span
+      style={{ 'cursor': 'pointer' }}
+      onClick={handleTitleClick}
+    >
+      {article.title}
+    </span>
+  )
+
+  const tag = (<Tag>{article.kind}</Tag>)
+
   const actions = (
     <Row>
       <Col flex={3}>
-        <Button type={like ? "primary" : "text"} onClick={handleLikeClick}>
+        <Button
+          type={like ? "primary" : "text"}
+          onClick={handleLikeClick}>
           <LikeOutlined />
-          赞同1.3k
+          点赞1.3k
         </Button>
       </Col>
       <Col flex={3}>
-        <Button type='text' onClick={() => { setComment(!comment) }}>
+        <Button
+          type='text'
+          onClick={handleCommentClick}>
           <CommentOutlined />
           19条评论
         </Button>
       </Col>
       <Col flex={2}>
-        <Button type='text' onClick={handleClick}>
+        <Button
+          type='text'
+          onClick={handleClick}>
           <ShareAltOutlined />
           分享
         </Button>
       </Col>
       <Col flex={2}>
-        <Button type='text' onClick={handleClick}>
+        <Button
+          type='text'
+          onClick={handleClick}>
           <HeartOutlined />
           喜欢
         </Button>
       </Col>
       <Col flex={1}>
-        <Button type='text' onClick={handleClick}>
+        <Button
+          type='text'
+          onClick={handleClick}
+        >
           <EllipsisOutlined />
         </Button>
       </Col>
       <Col span={3}>
-        {
-          !open ||
-          <Button type='text'
-            onClick={() => { setOpen(!open) }}>收起<UpOutlined />
-          </Button>
-        }
+        <Button
+          type='text'
+          onClick={() => { setOpen(!open) }}
+          hidden={!open}
+        >
+          收起
+          <UpOutlined />
+        </Button>
       </Col>
     </Row >
   )
 
-  const handleTitleClick = () => {
-    navigate('/detail', { state: article.articleId })
-  }
-
   return (<>
     <PageHeader
-      title={
-        <span
-          style={{ 'cursor': 'pointer' }}
-          onClick={handleTitleClick}
-        >
-          {article.title}
-        </span>
-      }
-      tags={<Tag>{article.kind}</Tag>}
+      title={title}
+      tags={tag}
       footer={actions}
     >
-      {
-        !open ||
-        <div className='article-author'>
-          <span>
-            {article.nickName}
-          </span>
-        </div>
-      }
+      <div className='article-author' hidden={!open}>
+        <span>
+          {article.nickName}
+        </span>
+      </div>
       <div
         onClick={() => setOpen(true)}
         className={`content-common ${open ? '' : 'content-close'}`}
       >
         {open ? article.content : article.content.slice(0, 64) + "…"}
-        {open || <span className={'content-switch'}>阅读全文<DownOutlined /></span>}
+        <span
+          className={'content-switch'}
+          hidden={open}>
+          阅读全文
+          <DownOutlined />
+        </span>
       </div>
-      {
-        !open ||
-        <div className='content-time'>
-          {
-            article.gmtModified === null
-              ? '发布于 ' + article.gmtCreated
-              : '修改于 ' + article.gmtModified
-          }
-        </div>
-      }
 
+      <div className='content-time' hidden={!open}>
+        {
+          article.gmtModified === null
+            ? `发布于 ${article.gmtCreated}`
+            : `修改于 ${article.gmtModified}`
+        }
+      </div>
     </PageHeader>
     <div style={{ 'padding': '16px 24px' }}>
-      {!comment || <ArticleComment articleId={article.articleId} />}
+      <ArticleComment
+        comment={comment}
+        articleId={article.articleId}
+        onClose={() => setComment(false)}
+      />
     </div>
   </>
   )

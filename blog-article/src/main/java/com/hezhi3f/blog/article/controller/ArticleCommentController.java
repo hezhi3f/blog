@@ -4,6 +4,7 @@ import com.hezhi3f.blog.article.service.ArticleCommentService;
 import com.hezhi3f.blog.common.entity.article.ArticleCommentCreateDTO;
 import com.hezhi3f.blog.common.entity.article.ArticleCommentDTO;
 import com.hezhi3f.blog.common.entity.article.ArticleCommentPageVO;
+import com.hezhi3f.blog.common.entity.article.ArticleCommentVO;
 import com.hezhi3f.blog.common.entity.result.Result;
 import com.hezhi3f.blog.common.util.ResultUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +18,9 @@ public class ArticleCommentController {
     private final ArticleCommentService commentService;
 
     @RequestMapping("/create")
-    public Result<Void> create(@RequestBody ArticleCommentCreateDTO dto) {
-        commentService.create(dto);
-        return ResultUtils.success();
+    public Result<ArticleCommentVO> create(@RequestBody ArticleCommentCreateDTO dto) {
+        ArticleCommentVO vo = commentService.create(dto);
+        return ResultUtils.success(vo);
     }
 
 

@@ -19,11 +19,11 @@ import java.util.stream.Collectors;
 @Service
 public class ArticleCommentServiceImpl
         extends ServiceImpl<ArticleCommentMapper, ArticleCommentPO> implements ArticleCommentService {
-    private static final long COMMENT_PAGE_SIZE = 5;
+    private static final long COMMENT_PAGE_SIZE = 2;
     private final UserService userService;
 
     @Override
-    public void create(ArticleCommentCreateDTO dto) {
+    public ArticleCommentVO create(ArticleCommentCreateDTO dto) {
         ArticleCommentPO po = new ArticleCommentPO();
         po.setArticleId(dto.getArticleId());
         po.setSuperCommentId(dto.getSuperCommentId());
@@ -31,13 +31,20 @@ public class ArticleCommentServiceImpl
         po.setToUserId(dto.getToUserId());
         po.setContent(dto.getContent());
         po.setGmtCreated(new Date());
+        this.save(po);
+        return poToVo(po);
     }
 
     @Override
     public ArticleCommentPageVO list(ArticleCommentDTO dto) {
-        QueryWrapper<ArticleCommentPO> wrapper = Wrappers.<ArticleCommentPO>query();
+        QueryWrapper<ArticleCommentPO> wrapper = Wrappers.<ArticleCommentPO>query()
+                .orderByDesc("gmt_created");
 
-        wrapper.eq("article_id", dto.getArticleId());
+        // all null throw
+
+        if (dto.getArticleId() != null) {
+            wrapper.eq("article_id", dto.getArticleId());
+        }
 
         if (dto.getSuperCommentId() == null) {
             wrapper.isNull("super_comment_id");
@@ -45,8 +52,9 @@ public class ArticleCommentServiceImpl
             wrapper.eq("super_comment_id", dto.getSuperCommentId());
         }
 
-        Page<ArticleCommentPO> page = this.page(new Page<>(dto.getCurrent(), COMMENT_PAGE_SIZE), wrapper);
+        Page<ArticleCommentPO> page = this.page(new Page<>(dto.getPage(), COMMENT_PAGE_SIZE), wrapper);
         ArticleCommentPageVO vo = new ArticleCommentPageVO();
+        vo.setCurrent(page.getCurrent());
         vo.setPages(page.getPages());
         vo.setTotal(page.getTotal());
 
@@ -57,11 +65,14 @@ public class ArticleCommentServiceImpl
 
     private ArticleCommentVO poToVo(ArticleCommentPO po) {
         ArticleCommentVO vo = new ArticleCommentVO();
+        Long from = po.getCommentUserId();
+        Long toId = po.getToUserId();
         vo.setId(po.getId());
-        String commentUserNickname = userService.getNickname(po.getCommentUserId()).getData();
-        vo.setCommentUserNickname(commentUserNickname);
-        String toUserNickname = userService.getNickname(po.getToUserId()).getData();
-        vo.setToUserNickname(toUserNickname);
+        vo.setArticleId(po.getArticleId());
+        vo.setCommentUserId(from);
+        vo.setCommentUserNickname(userService.getNickname(from).getData());
+        vo.setToUserId(toId);
+        vo.setToUserNickname(userService.getNickname(toId).getData());
         long count = this.count(Wrappers.<ArticleCommentPO>query().eq("super_comment_id", po.getId()));
         vo.setChildCommentCount(count);
         vo.setContent(po.getContent());

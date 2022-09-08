@@ -5,7 +5,6 @@ import api from '../../util/Api'
 
 
 const MainPane = () => {
-  console.log('Main Render');
   const [records, setRecords] = useState(null)
 
   const [total, setTotal] = useState(0)

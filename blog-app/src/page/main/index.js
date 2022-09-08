@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Tabs } from 'antd'
 import Common from '../../layout/common'
 import MainPane from './main'
